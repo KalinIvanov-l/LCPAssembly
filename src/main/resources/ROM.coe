@@ -1,0 +1,6 @@
+;####################################
+;# ROM.coe initialization file      #
+;# Block memory depth=256, width=12 #
+;####################################
+memory_initialization_radix=16;
+memory_initialization_vector=A00 402 202 400 A00 401 200 700 901 801 E0F 401 9FF E13 E06 700 901 400 E06 200 C00 E02 ;

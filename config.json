@@ -1,0 +1,16 @@
+{
+    "instructionConfig": [
+      {"mnemocode": "LOAD", "opcode": "1", "addressingModes": "3"},
+      {"mnemocode": "STORE", "opcode": "2", "addressingModes": "1"},
+      {"mnemocode": "NOR", "opcode": "3", "addressingModes": "3"},
+      {"mnemocode": "ADD", "opcode": "4", "addressingModes": "3"},
+      {"mnemocode": "INP", "opcode": "5", "addressingModes": "0"},
+      {"mnemocode": "OUTP", "opcode": "6", "addressingModes": "0"},
+      {"mnemocode": "JCC", "opcode": "7", "addressingModes": "1"}
+    ],
+    "instructionFieldsConfig": {
+      "opcodeFieldLength": "3",
+      "addressingModeFieldLength": "1",
+      "operandFieldLength": "8"
+    }
+}
