@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author kalin
  */
 @RestController
-@RequestMapping("config")
+@RequestMapping("/config")
 public class ConfigurationController {
     private final Configuration configuration;
 
