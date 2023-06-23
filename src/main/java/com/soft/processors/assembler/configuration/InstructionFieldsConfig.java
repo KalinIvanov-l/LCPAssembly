@@ -1,6 +1,8 @@
 package com.soft.processors.assembler.configuration;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -10,15 +12,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class InstructionFieldsConfig {
     public int opcodeFieldLength;
     public int addressingModeFieldLength;
     public int operandFieldLength;
-
-    public InstructionFieldsConfig(int opcodeFieldLength,
-                                   int addressingModeFieldLength, int operandFieldLength) {
-        this.opcodeFieldLength = opcodeFieldLength;
-        this.addressingModeFieldLength = addressingModeFieldLength;
-        this.operandFieldLength = operandFieldLength;
-    }
 }
