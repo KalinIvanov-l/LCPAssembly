@@ -1,6 +1,6 @@
-; Program to compute the greatest common divisor (GCD) of two numbers �a� and �b�
+; Program to compute the greatest common divisor (GCD) of two numbers a and b
 ;-----------------------------------------------------------------------
-a     EQU   00h     ; '�' - first number
+a     EQU   00h     ; 'a' - first number
 b     EQU   01h     ; 'b' - second number
 temp  EQU   02h     ; temporary variable
 ;-----------------------------------------------------------------------
