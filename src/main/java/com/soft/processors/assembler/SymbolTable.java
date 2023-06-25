@@ -1,5 +1,9 @@
 package com.soft.processors.assembler;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +17,10 @@ import java.util.Map;
  *
  * @author kalin
  */
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class SymbolTable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SymbolTable.class);
     private final HashMap<String, Integer> symbolStore;
