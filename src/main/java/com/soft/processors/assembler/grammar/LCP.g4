@@ -10,26 +10,25 @@ grammar LCP;
 assemblyProg : line* EOF ;
 // Line in assembly code 
 line : directive | labeledInstruction ;
-// Directive        
 directive : IDENT 'EQU' CONST ;
 // Labeled instruction
 labeledInstruction
     : LABEL ':' labeledInstruction          #labeledInstr
     | instruction                           #instr
     ;    
-// Instruction
-instruction 
+
+instruction
     : INSTR                                 #instrOnly 
     | INSTR oper                            #instrOper
     | INSTR expr                            #instrExpr
     | INSTR LABEL                           #instrLabel
     ;
-// Operand
+
 oper
     : expr                                  #operExpr
     | '#' expr                              #operImmExpr
     ;
-// Expression
+
 expr
     : IDENT                                 #exprIdent
     | CONST                                 #exprConstant
