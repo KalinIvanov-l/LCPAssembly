@@ -38,6 +38,10 @@ public class Configuration {
         return null;
     }
 
+    public InstructionFieldsConfig getInstructionFieldsConfig() {
+        return instructionFieldsConfig;
+    }
+
     /**
      * Read configuration from file [config.json]
      */
