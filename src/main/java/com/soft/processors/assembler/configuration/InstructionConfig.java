@@ -1,6 +1,5 @@
 package com.soft.processors.assembler.configuration;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,9 +12,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class InstructionConfig {
     public String mnemocode;
-    public int opcode;
-    public int addressingModes;
+    public Integer opcode;
+    public Integer addressingModes;
+
+    public InstructionConfig(String mnemocode, Integer opcode, Integer addressingModes) {
+        super();
+        this.mnemocode = mnemocode;
+        this.opcode = opcode;
+        this.addressingModes = addressingModes;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s, %d, %d", mnemocode, opcode, addressingModes);
+    }
+    public String getMnemocode() {
+        return mnemocode;
+    }
+    public int getOpcode() {
+        return opcode;
+    }
 }
