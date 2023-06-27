@@ -1,6 +1,5 @@
 package com.soft.processors.assembler.configuration;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
