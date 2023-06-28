@@ -10,9 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +25,7 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class LCPAssembler {
+    private final static String ROM_FILE = "ROM.coe";
     private static final Logger LOGGER = LoggerFactory.getLogger(LCPAssembler.class);
     private static final SymbolTable symbolTable = new SymbolTable();
     private static final ArrayList<Instruction> program = new ArrayList<>();
@@ -44,7 +43,7 @@ public class LCPAssembler {
      * @param sourceFile example file for program
      * @return if parse successes return true
      */
-    private static boolean parseSourceFile(String sourceFile) {
+    public static boolean parseSourceFile(String sourceFile) {
         try {
             ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(sourceFile));
 
@@ -72,13 +71,12 @@ public class LCPAssembler {
     /**
      * This method check instruction
      */
-    public static void printListing() {
+    public static String printListing() {
         String listing = "";
         String operandStr;
-        String formatString;
         int pc = 0;
 
-        LOGGER.info("; Address : Code\t; Instruction");
+        listing = listing.concat("; Address : Code             ;  Instruction\n\n");
 
         for (Instruction instr : program) {
             String line = "";
@@ -89,20 +87,8 @@ public class LCPAssembler {
 
             InstructionConfig instructionConfig = config.getInstructionConfig(instr.getOpcodeStr());
             if (instructionConfig == null) {
-                LOGGER.info(line, "UNKNOWN INSTRUCTION: ", instr.getOpcodeStr(), "\r\n");
-            }
-            assert instructionConfig != null;
-            int addressingModes = instructionConfig.getAddressingModes();
-            if (instr.getMode() == AddressMode.Mode.DEFAULT && (addressingModes != 0)) {
-                LOGGER.info(line, "INVALID ADDRESSING MODE FOR: ", instr.getOpcodeStr(), "\r\n");
-            }
-
-            if (instr.getMode() == AddressMode.Mode.ABSOLUTE && ((addressingModes & 0x01) == 0)) {
-                LOGGER.info(line, "INVALID ABSOLUTE MODE FOR: ", instr.getOpcodeStr(), "\n");
-            }
-
-            if (instr.getMode() == AddressMode.Mode.IMMEDIATE && ((addressingModes & 0x02) == 0)) {
-                LOGGER.info(line, "INVALID IMMEDIATE MODE FOR: ", instr.getOpcodeStr(), "\n");
+                line = line.concat(String.format("UNKNOWN INSTRUCTION: {}", instr.getOpcodeStr()));
+                listing = listing.concat(line + "\r\n");
                 continue;
             }
 
@@ -117,13 +103,7 @@ public class LCPAssembler {
                 instructionCode += instr.getOperand();
             }
 
-            formatString = "%1$" + String.format("%02d",
-                    (config.getInstructionFieldsConfig().getOpcodeFieldLength() +
-                            config.getInstructionFieldsConfig().getAddressingModeFieldLength() +
-                            config.getInstructionFieldsConfig().getOperandFieldLength()) / 5 + 1)
-                    + "X";
-            line = line.concat(String.format(formatString, instructionCode));
-
+            line = line.concat(String.format("%1$03X", instructionCode));
             line = line.concat("\t\t; "
                     + (String.format("%1$-5s", instr.getOpcodeStr())) + "\t"
                     + operandStr);
@@ -131,6 +111,7 @@ public class LCPAssembler {
             listing = listing.concat(line + "\r\n");
         }
         LOGGER.info("{}", listing);
+        return listing;
     }
 
     public static void printCoefficientFile() {
@@ -155,10 +136,10 @@ public class LCPAssembler {
      * This method read the input file name and parse the source file
      *
      * @param fileName name of input file
+     * @return input file
      */
-    public static void assemble(String fileName) {
-        String outputFile;
-        PrintStream ps;
+    public static AssemblyResult assemble(String fileName) {
+        String outputFile = "";
         LCPAssembler.inputFile = fileName;
 
         try {
@@ -167,28 +148,26 @@ public class LCPAssembler {
 
             if (inputFile == null) {
                 LOGGER.info("Input file not specified!\r\nUsage: java LCPAssembler <input_file>");
-                return;
+                return new AssemblyResult("", outputFile);
             }
 
-            outputFile = inputFile;
+            outputFile = ROM_FILE;
             if (inputFile.contains(".")) {
                 outputFile = inputFile.substring(0, inputFile.lastIndexOf('.'));
             }
             outputFile += ".lst";
-            try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
-                ps = new PrintStream(fileOutputStream);
-                System.setOut(ps);
 
-                if (!parseSourceFile(inputFile)) {
-                    return;
-                }
-                printListing();
-                ps = new PrintStream(fileOutputStream);
+            if (!parseSourceFile(inputFile)) {
+                return new AssemblyResult("", outputFile);
             }
-            System.setOut(ps);
             printCoefficientFile();
+
         } catch (Exception exception) {
             LOGGER.info("ERROR(main): ", exception);
+            return new AssemblyResult("", outputFile);
         }
+
+        String listingContent = printListing();
+        return new AssemblyResult(listingContent, outputFile);
     }
 }

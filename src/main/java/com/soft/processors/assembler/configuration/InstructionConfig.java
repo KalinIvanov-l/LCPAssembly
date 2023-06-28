@@ -28,10 +28,4 @@ public class InstructionConfig {
     public String toString() {
         return String.format("%s, %d, %d", mnemocode, opcode, addressingModes);
     }
-    public String getMnemocode() {
-        return mnemocode;
-    }
-    public int getOpcode() {
-        return opcode;
-    }
 }

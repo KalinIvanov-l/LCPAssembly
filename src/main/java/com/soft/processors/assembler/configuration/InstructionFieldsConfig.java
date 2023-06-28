@@ -29,10 +29,4 @@ public class InstructionFieldsConfig {
     public String toString() {
         return String.format("%d, %d, %d", opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
     }
-    public Integer getAddressingModeFieldLength() {
-        return addressingModeFieldLength;
-    }
-    public Integer getOperandFieldLength() {
-        return operandFieldLength;
-    }
 }

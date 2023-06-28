@@ -22,4 +22,16 @@ public class Instruction {
     private AddressMode.Mode mode;
     private String opcodeStr;
     private String operandStr;
+
+//    public Instruction() {
+//        clear();
+//    }
+//
+//    public void clear() {
+//        this.opcode = 0;
+//        this.operand = 0;
+//        this.mode = AddressMode.Mode.DEFAULT;
+//        this.opcodeStr = "";
+////        this.operandStr = "";
+//    }
 }
