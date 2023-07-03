@@ -45,7 +45,7 @@ public class AssemblerController {
             Map<String, Object> response = new HashMap<>();
             response.put("listing", assemblyResult.getListing());
             response.put("consoleOutput", assemblyResult.getOutputFile());
-            response.put("logs", assemblyResult.getLogs()); // Add logs to the response
+            response.put("logs", assemblyResult.getLogs());
             return ResponseEntity.ok(response);
         } catch (IOException e) {
             LOGGER.error("Error processing the file: {}", e.getMessage(), e);
