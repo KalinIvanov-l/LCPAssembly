@@ -38,7 +38,6 @@ public class Configuration {
         return null;
     }
 
-
     /**
      * Read configuration from file [config.json]
      */
