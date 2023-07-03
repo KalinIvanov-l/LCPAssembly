@@ -104,11 +104,6 @@ public class AssemblerController {
         }
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> testEndpoint() {
-        return ResponseEntity.ok("Test endpoint is working!");
-    }
-
     private Path createTempFileFromContent(String fileContent) throws IOException {
         Path tempFile = Files.createTempFile("assembler-", ".tmp");
         Files.writeString(tempFile, fileContent);
