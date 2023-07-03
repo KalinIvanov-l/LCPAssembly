@@ -18,6 +18,12 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * AssemblerController is a Spring Boot REST controller responsible for handling requests related to
+ * assembling, saving, and loading files.
+ *
+ * @author kalin
+ */
 @RestController
 @RequestMapping("/assembler")
 public class AssemblerController {
