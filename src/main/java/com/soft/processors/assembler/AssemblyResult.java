@@ -8,12 +8,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class AssemblyResult {
-    private final String listing;
-    private final String outputFile;
-    private String logs;
+  private final String listing;
+  private final String outputFile;
+  private String logs;
 
-    public AssemblyResult(String listing, String outputFile) {
-        this.listing = listing;
-        this.outputFile = outputFile;
-    }
+  public AssemblyResult(String listing, String outputFile) {
+    this.listing = listing;
+    this.outputFile = outputFile;
+  }
 }
