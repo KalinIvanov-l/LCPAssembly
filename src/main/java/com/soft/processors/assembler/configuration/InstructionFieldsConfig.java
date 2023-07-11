@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * This class represents the configuration of the fields in an instruction in an assembler
+ * This class represents the configuration of the fields in an instruction in an assembler.
  *
  * @author kalin
  */
@@ -13,20 +13,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class InstructionFieldsConfig {
-    public Integer opcodeFieldLength;
-    public Integer addressingModeFieldLength;
-    public Integer operandFieldLength;
+  public Integer opcodeFieldLength;
+  public Integer addressingModeFieldLength;
+  public Integer operandFieldLength;
 
-    public InstructionFieldsConfig(Integer opcodeFieldLength,
-                                   Integer addressingModeFieldLength, Integer operandFieldLength) {
-        super();
-        this.opcodeFieldLength = opcodeFieldLength;
-        this.addressingModeFieldLength = addressingModeFieldLength;
-        this.operandFieldLength = operandFieldLength;
-    }
+  public InstructionFieldsConfig(Integer opcodeFieldLength,
+                                 Integer addressingModeFieldLength, Integer operandFieldLength) {
+    super();
+    this.opcodeFieldLength = opcodeFieldLength;
+    this.addressingModeFieldLength = addressingModeFieldLength;
+    this.operandFieldLength = operandFieldLength;
+  }
 
-    @Override
-    public String toString() {
-        return String.format("%d, %d, %d", opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
-    }
+  @Override
+  public String toString() {
+    return String.format("%d, %d, %d", opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
+  }
 }

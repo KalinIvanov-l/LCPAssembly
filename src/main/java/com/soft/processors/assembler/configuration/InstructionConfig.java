@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * This class represents the configuration of an instruction in an assembler
+ * This class represents the configuration of an instruction in an assembler.
  *
  * @author kalin
  */
@@ -13,19 +13,19 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class InstructionConfig {
-    public String mnemocode;
-    public Integer opcode;
-    public Integer addressingModes;
+  public String mnemocode;
+  public Integer opcode;
+  public Integer addressingModes;
 
-    public InstructionConfig(String mnemocode, Integer opcode, Integer addressingModes) {
-        super();
-        this.mnemocode = mnemocode;
-        this.opcode = opcode;
-        this.addressingModes = addressingModes;
-    }
+  public InstructionConfig(String mnemocode, Integer opcode, Integer addressingModes) {
+    super();
+    this.mnemocode = mnemocode;
+    this.opcode = opcode;
+    this.addressingModes = addressingModes;
+  }
 
-    @Override
-    public String toString() {
-        return String.format("%s, %d, %d", mnemocode, opcode, addressingModes);
-    }
+  @Override
+  public String toString() {
+    return String.format("%s, %d, %d", mnemocode, opcode, addressingModes);
+  }
 }
