@@ -17,21 +17,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Instruction {
-    private int opcode;
-    private int operand;
-    private AddressMode.Mode mode;
-    private String opcodeStr;
-    private String operandStr;
-
-//    public Instruction() {
-//        clear();
-//    }
-//
-//    public void clear() {
-//        this.opcode = 0;
-//        this.operand = 0;
-//        this.mode = AddressMode.Mode.DEFAULT;
-//        this.opcodeStr = "";
-////        this.operandStr = "";
-//    }
+  private int opcode;
+  private int operand;
+  private AddressMode.Mode mode;
+  private String opcodeStr;
+  private String operandStr;
 }
