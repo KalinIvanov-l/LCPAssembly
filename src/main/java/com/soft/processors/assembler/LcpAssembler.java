@@ -26,8 +26,11 @@ import org.slf4j.LoggerFactory;
 public class LcpAssembler {
   private static final String ROM_FILE = "ROM.coe";
   private static final Logger LOGGER = LoggerFactory.getLogger(LcpAssembler.class);
+  @Getter
   private static final SymbolTable symbolTable = new SymbolTable();
+  @Getter
   private static final ArrayList<Instruction> program = new ArrayList<>();
+  @Getter
   private static final Configuration config = new Configuration();
   private static String inputFile = "";
 
