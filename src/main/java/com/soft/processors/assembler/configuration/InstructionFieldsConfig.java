@@ -17,6 +17,13 @@ public class InstructionFieldsConfig {
   public Integer addressingModeFieldLength;
   public Integer operandFieldLength;
 
+  /**
+   * Constructor InstructionFieldsConfig.
+   *
+   * @param opcodeFieldLength         the length of the opcode field
+   * @param addressingModeFieldLength the length of the addressing mode field
+   * @param operandFieldLength        the length of the operand field
+   */
   public InstructionFieldsConfig(Integer opcodeFieldLength,
                                  Integer addressingModeFieldLength, Integer operandFieldLength) {
     super();
@@ -27,6 +34,7 @@ public class InstructionFieldsConfig {
 
   @Override
   public String toString() {
-    return String.format("%d, %d, %d", opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
+    return String.format(
+            "%d, %d, %d", opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
   }
 }

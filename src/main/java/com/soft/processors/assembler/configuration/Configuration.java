@@ -26,10 +26,17 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor
 public class Configuration {
   private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
-  private static final String CFG_FILE = "config.json";
+  @Setter
+  public static String cfgFILE = "config.json";
   private InstructionFieldsConfig instructionFieldsConfig;
   private HashMap<String, InstructionConfig> instructionConfigMap;
 
+  /**
+   * Returns the instruction configuration for the specified mnemonic.
+   *
+   * @param key the mnemonic to look up
+   * @return the instruction configuration, or null if the mnemonic is not found
+   */
   public InstructionConfig getInstructionConfig(String key) {
     if (instructionConfigMap.containsKey(key)) {
       return instructionConfigMap.get(key);
@@ -40,13 +47,13 @@ public class Configuration {
   /**
    * Read configuration from file [config.json]
    */
-  public void readConfig() {
+  public void readConfig() throws ConfigurationException {
     instructionFieldsConfig = new InstructionFieldsConfig(3, 1, 8);
     instructionConfigMap = new HashMap<>();
     try {
       StringBuilder jsonBuilder;
       try (BufferedReader reader = new BufferedReader(new FileReader(
-              CFG_FILE))) {
+              cfgFILE))) {
         jsonBuilder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -89,7 +96,7 @@ public class Configuration {
       }
       LOGGER.info("Configuration read: OK");
     } catch (IOException e) {
-      LOGGER.error("Error reading configuration file: ");
+      throw new ConfigurationException("Error reading configuration file: ");
     }
   }
 
