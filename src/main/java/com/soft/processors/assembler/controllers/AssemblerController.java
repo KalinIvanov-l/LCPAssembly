@@ -1,7 +1,7 @@
 package com.soft.processors.assembler.controllers;
 
 import com.soft.processors.assembler.AssemblyResult;
-import com.soft.processors.assembler.LCPAssembler;
+import com.soft.processors.assembler.LcpAssembler;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * AssemblerController is a Spring Boot REST controller responsible for handling requests related to
@@ -33,6 +37,12 @@ public class AssemblerController {
     LOGGER.info("AssemblerController initialized");
   }
 
+  /**
+   * Assembles the specified file content and returns the assembly result.
+   *
+   * @param fileContent the content of the file.
+   * @return assembly result
+   */
   @PostMapping("/assemble")
   public ResponseEntity<Map<String, Object>> assemble(@RequestBody String fileContent) {
     LOGGER.info("Received file content: {}", fileContent);
@@ -41,7 +51,7 @@ public class AssemblerController {
 
       LOGGER.info("Assembling the file: {}", tempFile);
 
-      AssemblyResult assemblyResult = LCPAssembler.assemble(tempFile.toString());
+      AssemblyResult assemblyResult = LcpAssembler.assemble(tempFile.toString());
       Files.delete(tempFile);
 
       LOGGER.info("Output file generated: {}", assemblyResult.getOutputFile());
@@ -64,6 +74,12 @@ public class AssemblerController {
     }
   }
 
+  /**
+   * Save the specified file.
+   *
+   * @param fileData the data of the file to save.
+   * @return message
+   */
   @PostMapping("/saveFile")
   public ResponseEntity<Map<String, String>> saveFile(@RequestBody String fileData) {
     try {
@@ -80,6 +96,11 @@ public class AssemblerController {
     }
   }
 
+  /**
+   * Loads file which contains example program and return its context.
+   *
+   * @return the loaded file
+   */
   @GetMapping("/loadFile")
   public ResponseEntity<String> loadFile() {
     LOGGER.info("Current working directory: {}", System.getProperty("user.dir"));
@@ -98,7 +119,8 @@ public class AssemblerController {
       return ResponseEntity.ok(fileContent);
     } catch (IOException e) {
       LOGGER.error("Error occurred while loading the file: {}", e.getMessage(), e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while loading the file: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+              "Error occurred while loading the file: " + e.getMessage());
     }
   }
 
