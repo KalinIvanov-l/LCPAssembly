@@ -65,7 +65,7 @@ public class LcpAssembler {
       program.clear();
       visitor.visit(tree);
     } catch (Exception exception) {
-      LOGGER.info("ERROR(parseSourceFile): ", exception);
+      LOGGER.error("ERROR(parseSourceFile): ", exception);
       return false;
     }
     return true;
@@ -169,7 +169,7 @@ public class LcpAssembler {
       printCoefficientFile();
 
     } catch (Exception exception) {
-      LOGGER.info("ERROR(main): ", exception);
+      LOGGER.error("ERROR(main): ", exception);
       return new AssemblyResult("", outputFile);
     }
 
