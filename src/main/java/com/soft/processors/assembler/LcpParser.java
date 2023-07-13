@@ -1,11 +1,14 @@
 package com.soft.processors.assembler;
 
 import java.util.List;
-
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
  * Generated from grammar/LCP.g4 by ANTLR 4.5.3
@@ -13,7 +16,7 @@ import org.antlr.v4.runtime.tree.*;
  * @author kalin
  */
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class LCPParser extends Parser {
+public class LcpParser extends Parser {
   static {
     RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION);
   }
@@ -96,14 +99,14 @@ public class LCPParser extends Parser {
 
   public static Integer pass = 1;
 
-  public LCPParser(TokenStream input) {
+  public LcpParser(TokenStream input) {
     super(input);
     _interp = new ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
   }
 
   public static class AssemblyProgContext extends ParserRuleContext {
     public TerminalNode EOF() {
-      return getToken(LCPParser.EOF, 0);
+      return getToken(LcpParser.EOF, 0);
     }
 
     public List<LineContext> line() {
@@ -125,7 +128,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitAssemblyProg(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitAssemblyProg(this);
       else return visitor.visitChildren(this);
     }
   }
@@ -184,7 +187,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitLine(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitLine(this);
       else return visitor.visitChildren(this);
     }
   }
@@ -225,11 +228,11 @@ public class LCPParser extends Parser {
 
   public static class DirectiveContext extends ParserRuleContext {
     public TerminalNode IDENT() {
-      return getToken(LCPParser.IDENT, 0);
+      return getToken(LcpParser.IDENT, 0);
     }
 
     public TerminalNode CONST() {
-      return getToken(LCPParser.CONST, 0);
+      return getToken(LcpParser.CONST, 0);
     }
 
     public DirectiveContext(ParserRuleContext parent, int invokingState) {
@@ -243,7 +246,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitDirective(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitDirective(this);
       else return visitor.visitChildren(this);
     }
   }
@@ -300,14 +303,14 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitInstr(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstr(this);
       else return visitor.visitChildren(this);
     }
   }
 
   public static class LabeledInstrContext extends LabeledInstructionContext {
     public TerminalNode LABEL() {
-      return getToken(LCPParser.LABEL, 0);
+      return getToken(LcpParser.LABEL, 0);
     }
 
     public LabeledInstructionContext labeledInstruction() {
@@ -320,7 +323,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitLabeledInstr(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitLabeledInstr(this);
       else return visitor.visitChildren(this);
     }
   }
@@ -384,7 +387,7 @@ public class LCPParser extends Parser {
 
   public static class InstrOnlyContext extends InstructionContext {
     public TerminalNode INSTR() {
-      return getToken(LCPParser.INSTR, 0);
+      return getToken(LcpParser.INSTR, 0);
     }
 
     public InstrOnlyContext(InstructionContext ctx) {
@@ -393,14 +396,14 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitInstrOnly(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrOnly(this);
       else return visitor.visitChildren(this);
     }
   }
 
   public static class InstrOperContext extends InstructionContext {
     public TerminalNode INSTR() {
-      return getToken(LCPParser.INSTR, 0);
+      return getToken(LcpParser.INSTR, 0);
     }
 
     public OperContext oper() {
@@ -413,14 +416,14 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitInstrOper(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrOper(this);
       else return visitor.visitChildren(this);
     }
   }
 
   public static class InstrExprContext extends InstructionContext {
     public TerminalNode INSTR() {
-      return getToken(LCPParser.INSTR, 0);
+      return getToken(LcpParser.INSTR, 0);
     }
 
     public ExprContext expr() {
@@ -433,18 +436,18 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitInstrExpr(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrExpr(this);
       else return visitor.visitChildren(this);
     }
   }
 
   public static class InstrLabelContext extends InstructionContext {
     public TerminalNode INSTR() {
-      return getToken(LCPParser.INSTR, 0);
+      return getToken(LcpParser.INSTR, 0);
     }
 
     public TerminalNode LABEL() {
-      return getToken(LCPParser.LABEL, 0);
+      return getToken(LcpParser.LABEL, 0);
     }
 
     public InstrLabelContext(InstructionContext ctx) {
@@ -453,7 +456,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitInstrLabel(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrLabel(this);
       else return visitor.visitChildren(this);
     }
   }
@@ -543,7 +546,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitOperImmExpr(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitOperImmExpr(this);
       else return visitor.visitChildren(this);
     }
   }
@@ -559,7 +562,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitOperExpr(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitOperExpr(this);
       else return visitor.visitChildren(this);
     }
   }
@@ -622,7 +625,7 @@ public class LCPParser extends Parser {
 
   public static class ExprIdentContext extends ExprContext {
     public TerminalNode IDENT() {
-      return getToken(LCPParser.IDENT, 0);
+      return getToken(LcpParser.IDENT, 0);
     }
 
     public ExprIdentContext(ExprContext ctx) {
@@ -631,14 +634,14 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitExprIdent(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitExprIdent(this);
       else return visitor.visitChildren(this);
     }
   }
 
   public static class ExprConstantContext extends ExprContext {
     public TerminalNode CONST() {
-      return getToken(LCPParser.CONST, 0);
+      return getToken(LcpParser.CONST, 0);
     }
 
     public ExprConstantContext(ExprContext ctx) {
@@ -647,7 +650,7 @@ public class LCPParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LCPVisitor) return ((LCPVisitor<? extends T>) visitor).visitExprConstant(this);
+      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitExprConstant(this);
       else return visitor.visitChildren(this);
     }
   }

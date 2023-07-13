@@ -50,18 +50,18 @@ public class LcpAssembler {
     try {
       ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(sourceFile));
 
-      LCPLexer lexer = new LCPLexer(input);
+      LcpLexer lexer = new LcpLexer(input);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
-      LCPParser parser = new LCPParser(tokens);
+      LcpParser parser = new LcpParser(tokens);
 
-      LCPParser.pass = 1;
+      LcpParser.pass = 1;
       program.clear();
       ParseTree tree = parser.assemblyProg();
-      LCPParserVisitor visitor = new LCPParserVisitor(symbolTable, program, config);
+      LcpParserVisitor visitor = new LcpParserVisitor(symbolTable, program, config);
       visitor.visit(tree);
       LOGGER.info("{}", symbolTable);
 
-      LCPParser.pass = 2;
+      LcpParser.pass = 2;
       program.clear();
       visitor.visit(tree);
     } catch (Exception exception) {

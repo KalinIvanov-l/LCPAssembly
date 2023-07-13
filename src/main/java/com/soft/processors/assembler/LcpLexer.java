@@ -1,9 +1,10 @@
 package com.soft.processors.assembler;
 
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
 
 /**
@@ -13,7 +14,7 @@ import org.antlr.v4.runtime.dfa.DFA;
  * @author kalin
  */
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class LCPLexer extends Lexer {
+public class LcpLexer extends Lexer {
     static {
         RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION);
     }
@@ -79,7 +80,7 @@ public class LCPLexer extends Lexer {
      *
      * @param input the input
      */
-    public LCPLexer(CharStream input) {
+    public LcpLexer(CharStream input) {
         super(input);
         _interp = new LexerATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
     }
