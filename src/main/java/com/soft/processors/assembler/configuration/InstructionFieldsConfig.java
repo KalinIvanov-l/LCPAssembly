@@ -3,6 +3,7 @@ package com.soft.processors.assembler.configuration;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * This class represents the configuration of the fields in an instruction in an assembler.
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class InstructionFieldsConfig {
   public Integer opcodeFieldLength;
   public Integer addressingModeFieldLength;
@@ -30,11 +32,5 @@ public class InstructionFieldsConfig {
     this.opcodeFieldLength = opcodeFieldLength;
     this.addressingModeFieldLength = addressingModeFieldLength;
     this.operandFieldLength = operandFieldLength;
-  }
-
-  @Override
-  public String toString() {
-    return String.format(
-            "%d, %d, %d", opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
   }
 }
