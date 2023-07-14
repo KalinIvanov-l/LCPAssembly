@@ -62,6 +62,7 @@ class ConfigurationTest {
     Configuration.setCfgFILE("invalid_config.json");
     assertThrows(ConfigurationException.class, () -> configuration.readConfig());
   }
+
   @Test
   void readConfigurationWithInvalidJson() throws IOException {
     File tempFile = File.createTempFile("temp_config", ".json");
