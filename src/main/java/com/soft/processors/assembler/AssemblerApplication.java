@@ -1,5 +1,7 @@
 package com.soft.processors.assembler;
 
+import com.soft.processors.assembler.configuration.ConfigurationException;
+import java.io.IOException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class AssemblerApplication {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException, ConfigurationException {
     SpringApplication.run(AssemblerApplication.class, args);
     LcpAssembler.assemble("src/main/resources/test.txt");
   }

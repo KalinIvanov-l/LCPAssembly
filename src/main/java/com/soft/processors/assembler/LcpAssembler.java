@@ -1,8 +1,10 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,28 +49,23 @@ public final class LcpAssembler {
    * @param sourceFile example file for program
    * @return if parse successes return true
    */
-  public static boolean parseSourceFile(String sourceFile) {
-    try {
-      ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(sourceFile));
+  public static boolean parseSourceFile(String sourceFile) throws IOException {
+    ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(sourceFile));
 
-      LcpLexer lexer = new LcpLexer(input);
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-      LcpParser parser = new LcpParser(tokens);
+    LcpLexer lexer = new LcpLexer(input);
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    LcpParser parser = new LcpParser(tokens);
 
-      LcpParser.pass = 1;
-      program.clear();
-      ParseTree tree = parser.assemblyProg();
-      LcpParserVisitor visitor = new LcpParserVisitor(symbolTable, program, config);
-      visitor.visit(tree);
-      LOGGER.info("{}", symbolTable);
+    LcpParser.pass = 1;
+    program.clear();
+    ParseTree tree = parser.assemblyProg();
+    LcpParserVisitor visitor = new LcpParserVisitor(symbolTable, program, config);
+    visitor.visit(tree);
+    LOGGER.info("{}", symbolTable);
 
-      LcpParser.pass = 2;
-      program.clear();
-      visitor.visit(tree);
-    } catch (Exception exception) {
-      LOGGER.error("ERROR(parseSourceFile): ", exception);
-      return false;
-    }
+    LcpParser.pass = 2;
+    program.clear();
+    visitor.visit(tree);
     return true;
   }
 
@@ -134,7 +131,7 @@ public final class LcpAssembler {
         opcode += 1;
       }
       vector = vector.concat(String.format("%1$01X", opcode)
-              + String.format("%1$02X", instr.getOperand()) + " ");
+            + String.format("%1$02X", instr.getOperand()) + " ");
     }
     LOGGER.info(vector, ";");
   }
@@ -145,34 +142,24 @@ public final class LcpAssembler {
    * @param fileName name of input file
    * @return input file
    */
-  public static AssemblyResult assemble(String fileName) {
-    String outputFile = "";
+  public static AssemblyResult assemble(String fileName)
+        throws ConfigurationException {
+
     LcpAssembler.inputFile = fileName;
+    config.loadDefaultConfig();
+    config.readConfig();
 
-    try {
-      config.loadDefaultConfig();
-      config.readConfig();
+    String outputFile;
+    outputFile = ROM_FILE;
+    if (inputFile.contains(".")) {
+      outputFile = inputFile.substring(0, inputFile.lastIndexOf('.'));
+    }
+    outputFile += ".lst";
 
-      if (inputFile == null) {
-        LOGGER.info("Input file not specified!\r\nUsage: java LCPAssembler <input_file>");
-        return new AssemblyResult("", outputFile);
-      }
-
-      outputFile = ROM_FILE;
-      if (inputFile.contains(".")) {
-        outputFile = inputFile.substring(0, inputFile.lastIndexOf('.'));
-      }
-      outputFile += ".lst";
-
-      if (!parseSourceFile(inputFile)) {
-        return new AssemblyResult("", outputFile);
-      }
-      printCoefficientFile();
-
-    } catch (Exception exception) {
-      LOGGER.error("ERROR(main): ", exception);
+    if (program.isEmpty()) {
       return new AssemblyResult("", outputFile);
     }
+    printCoefficientFile();
 
     String listingContent = printListing();
     return new AssemblyResult(listingContent, outputFile);
