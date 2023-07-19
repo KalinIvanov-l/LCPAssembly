@@ -33,10 +33,6 @@ public class AssemblerController {
   private static final String TEST_FILE_PATH = "src/main/resources/test.txt";
   private static final String MESSAGE_ERROR = "error";
 
-  public AssemblerController() {
-    LOGGER.info("AssemblerController initialized");
-  }
-
   /**
    * Assembles the specified file content and returns the assembly result.
    *
