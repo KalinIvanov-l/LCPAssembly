@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 @Getter
 @Setter
-public class LcpAssembler {
+public final class LcpAssembler {
   private static final String ROM_FILE = "ROM.coe";
   private static final Logger LOGGER = LoggerFactory.getLogger(LcpAssembler.class);
   @Getter
@@ -34,7 +34,8 @@ public class LcpAssembler {
   private static final Configuration config = new Configuration();
   private static String inputFile = "";
 
-  private LcpAssembler() {
+  private LcpAssembler() throws IllegalAccessException {
+    throw new IllegalAccessException("This is a utility class and should not be instantiated ");
   }
 
   /**
