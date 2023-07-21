@@ -143,7 +143,7 @@ public final class LcpAssembler {
    * @return input file
    */
   public static AssemblyResult assemble(String fileName)
-        throws ConfigurationException {
+        throws ConfigurationException, IOException {
 
     LcpAssembler.inputFile = fileName;
     config.loadDefaultConfig();
@@ -156,12 +156,16 @@ public final class LcpAssembler {
     }
     outputFile += ".lst";
 
-    if (program.isEmpty()) {
+    if (!LcpAssembler.parseSourceFile(inputFile)) {
       return new AssemblyResult("", outputFile);
     }
-    printCoefficientFile();
 
-    String listingContent = printListing();
+    if (program.isEmpty()) {
+      LOGGER.warn("No instructions were generated. Listing cannot be generated.");
+      return new AssemblyResult("", outputFile);
+    }
+
+    String listingContent = LcpAssembler.printListing();
     return new AssemblyResult(listingContent, outputFile);
   }
 }
