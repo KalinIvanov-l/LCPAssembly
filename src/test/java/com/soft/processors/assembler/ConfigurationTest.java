@@ -2,7 +2,6 @@ package com.soft.processors.assembler;
 
 import com.google.gson.JsonSyntaxException;
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.configuration.InstructionFieldsConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ class ConfigurationTest {
   }
 
   @Test
-  void readConfig() throws ConfigurationException {
+  void readConfig() throws IOException {
     configuration.readConfig();
 
     InstructionFieldsConfig instructionFieldsConfig =
@@ -60,7 +60,7 @@ class ConfigurationTest {
   @Test
   void readConfigurationWithInvalidFile() {
     Configuration.setCfgFILE("invalid_config.json");
-    assertThrows(ConfigurationException.class, () -> configuration.readConfig());
+    assertThrows(FileNotFoundException.class, () -> configuration.readConfig());
   }
 
   @Test
