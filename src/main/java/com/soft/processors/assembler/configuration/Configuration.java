@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -47,57 +48,47 @@ public class Configuration {
   /**
    * Read configuration from file [config.json]
    */
-  public void readConfig() throws ConfigurationException {
+  public void readConfig() throws IOException {
     instructionFieldsConfig = new InstructionFieldsConfig(3, 1, 8);
     instructionConfigMap = new HashMap<>();
-    try {
-      StringBuilder jsonBuilder;
-      try (BufferedReader reader = new BufferedReader(new FileReader(
-              cfgFILE))) {
-        jsonBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-          jsonBuilder.append(line);
-        }
+
+    File configFile = new File(cfgFILE);
+    StringBuilder jsonBuilder = new StringBuilder();
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        jsonBuilder.append(line);
       }
-
-      String json = jsonBuilder.toString();
-      JsonObject configObj = JsonParser.parseString(json)
-              .getAsJsonObject();
-
-      // Parse instruction fields config
-      JsonObject fieldsObj = configObj
-              .getAsJsonObject("instructionFieldsConfig");
-      instructionFieldsConfig = new InstructionFieldsConfig(0, 0, 0);
-      instructionFieldsConfig.opcodeFieldLength = fieldsObj
-              .getAsJsonPrimitive("opcodeFieldLength").getAsInt();
-      instructionFieldsConfig.addressingModeFieldLength = fieldsObj
-              .getAsJsonPrimitive("addressingModeFieldLength").getAsInt();
-      instructionFieldsConfig.operandFieldLength = fieldsObj
-              .getAsJsonPrimitive("operandFieldLength").getAsInt();
-
-      // Parse instruction config map
-      instructionConfigMap = new HashMap<>();
-      JsonArray instructionArray = configObj
-              .getAsJsonArray("instructionConfig");
-      for (int i = 0; i < instructionArray.size(); i++) {
-        JsonObject instructionObj = instructionArray.get(i)
-                .getAsJsonObject();
-        InstructionConfig instructionConfig = new InstructionConfig("",
-                0, 0);
-        instructionConfig.mnemocode = instructionObj
-                .getAsJsonPrimitive("mnemocode").getAsString();
-        instructionConfig.opcode = instructionObj.getAsJsonPrimitive(
-                "opcode").getAsInt();
-        instructionConfig.addressingModes = instructionObj
-                .getAsJsonPrimitive("addressingModes").getAsInt();
-        instructionConfigMap.put(instructionConfig.mnemocode,
-                instructionConfig);
-      }
-      LOGGER.info("Configuration read: OK");
-    } catch (IOException e) {
-      throw new ConfigurationException("Error reading configuration file: ");
     }
+
+    String json = jsonBuilder.toString();
+    JsonObject configObj = JsonParser.parseString(json).getAsJsonObject();
+
+    // Parse instruction fields config
+    JsonObject fieldsObj = configObj.getAsJsonObject("instructionFieldsConfig");
+    instructionFieldsConfig = new InstructionFieldsConfig(0, 0, 0);
+    instructionFieldsConfig.opcodeFieldLength =
+          fieldsObj.getAsJsonPrimitive("opcodeFieldLength").getAsInt();
+    instructionFieldsConfig.addressingModeFieldLength =
+          fieldsObj.getAsJsonPrimitive("addressingModeFieldLength").getAsInt();
+    instructionFieldsConfig.operandFieldLength =
+          fieldsObj.getAsJsonPrimitive("operandFieldLength").getAsInt();
+
+    // Parse instruction config map
+    instructionConfigMap = new HashMap<>();
+    JsonArray instructionArray = configObj.getAsJsonArray("instructionConfig");
+
+    for (int i = 0; i < instructionArray.size(); i++) {
+      JsonObject instructionObj = instructionArray.get(i).getAsJsonObject();
+      InstructionConfig instructionConfig = new InstructionConfig("", 0, 0);
+      instructionConfig.mnemocode = instructionObj.getAsJsonPrimitive("mnemocode").getAsString();
+      instructionConfig.opcode = instructionObj.getAsJsonPrimitive("opcode").getAsInt();
+      instructionConfig.addressingModes =
+            instructionObj.getAsJsonPrimitive("addressingModes").getAsInt();
+      instructionConfigMap.put(instructionConfig.mnemocode, instructionConfig);
+    }
+    LOGGER.info("Configuration read: OK");
   }
 
   /**
