@@ -49,9 +49,19 @@ public class Configuration {
    * Read configuration from file [config.json]
    */
   public void readConfig() throws IOException {
-    instructionFieldsConfig = new InstructionFieldsConfig(3, 1, 8);
-    instructionConfigMap = new HashMap<>();
+    JsonObject configObj = readConfigFile();
+    instructionFieldsConfig = readInstructionFieldsConfig(configObj);
+    instructionConfigMap = readInstructionConfigMap(configObj);
+    LOGGER.info("Configuration read: OK");
+  }
 
+  /**
+   * Reads the content of the configuration file and parses it into a JsonObject.
+   *
+   * @return The JsonObject containing the configuration data.
+   * @throws IOException if an I/O error occurs while reading the configuration file.
+   */
+  private JsonObject readConfigFile() throws IOException {
     File configFile = new File(cfgFILE);
     StringBuilder jsonBuilder = new StringBuilder();
 
@@ -63,32 +73,50 @@ public class Configuration {
     }
 
     String json = jsonBuilder.toString();
-    JsonObject configObj = JsonParser.parseString(json).getAsJsonObject();
+    return JsonParser.parseString(json).getAsJsonObject();
+  }
 
-    // Parse instruction fields config
+  /**
+   * Reads the instruction fields configuration from the given JsonObject and creates an
+   * InstructionFieldsConfig object with the extracted data.
+   *
+   * @param configObj The JsonObject containing the instruction fields configuration.
+   * @return An InstructionFieldsConfig object with the configuration data.
+   */
+  private InstructionFieldsConfig readInstructionFieldsConfig(JsonObject configObj) {
     JsonObject fieldsObj = configObj.getAsJsonObject("instructionFieldsConfig");
-    instructionFieldsConfig = new InstructionFieldsConfig(0, 0, 0);
-    instructionFieldsConfig.opcodeFieldLength =
-          fieldsObj.getAsJsonPrimitive("opcodeFieldLength").getAsInt();
-    instructionFieldsConfig.addressingModeFieldLength =
-          fieldsObj.getAsJsonPrimitive("addressingModeFieldLength").getAsInt();
-    instructionFieldsConfig.operandFieldLength =
-          fieldsObj.getAsJsonPrimitive("operandFieldLength").getAsInt();
+    int opcodeFieldLength = fieldsObj.getAsJsonPrimitive("opcodeFieldLength").getAsInt();
+    int addressingModeFieldLength = fieldsObj.getAsJsonPrimitive(
+            "addressingModeFieldLength").getAsInt();
+    int operandFieldLength = fieldsObj.getAsJsonPrimitive("operandFieldLength").getAsInt();
 
-    // Parse instruction config map
-    instructionConfigMap = new HashMap<>();
+    return new InstructionFieldsConfig(
+            opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
+  }
+
+  /**
+   * Reads the instruction configuration map from the given JsonObject and creates a HashMap
+   * containing InstructionConfig objects with the extracted data.
+   *
+   * @param configObj The JsonObject containing the instruction configuration map.
+   * @return A HashMap containing InstructionConfig objects with mnemonic as keys and the
+   *         corresponding configuration data as values.
+   */
+  private HashMap<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
+    HashMap<String, InstructionConfig> configHashMap = new HashMap<>();
     JsonArray instructionArray = configObj.getAsJsonArray("instructionConfig");
 
     for (int i = 0; i < instructionArray.size(); i++) {
       JsonObject instructionObj = instructionArray.get(i).getAsJsonObject();
-      InstructionConfig instructionConfig = new InstructionConfig("", 0, 0);
-      instructionConfig.mnemocode = instructionObj.getAsJsonPrimitive("mnemocode").getAsString();
-      instructionConfig.opcode = instructionObj.getAsJsonPrimitive("opcode").getAsInt();
-      instructionConfig.addressingModes =
-            instructionObj.getAsJsonPrimitive("addressingModes").getAsInt();
-      instructionConfigMap.put(instructionConfig.mnemocode, instructionConfig);
+      String mnemocode = instructionObj.getAsJsonPrimitive("mnemocode").getAsString();
+      int opcode = instructionObj.getAsJsonPrimitive("opcode").getAsInt();
+      int addressingModes = instructionObj.getAsJsonPrimitive("addressingModes").getAsInt();
+      InstructionConfig instructionConfig = new InstructionConfig(
+              mnemocode, opcode, addressingModes);
+      configHashMap.put(mnemocode, instructionConfig);
     }
-    LOGGER.info("Configuration read: OK");
+
+    return configHashMap;
   }
 
   /**
