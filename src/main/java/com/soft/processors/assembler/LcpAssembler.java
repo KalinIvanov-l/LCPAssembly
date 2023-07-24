@@ -149,7 +149,7 @@ public final class LcpAssembler {
    *
    * @param fileName name of input file
    * @return input file
-   * @throws IOException if file is not found
+   * @throws IOException if an I/O error occurs while reading the configuration file.
    */
   public static AssemblyResult assemble(String fileName) throws IOException {
     LcpAssembler.inputFile = fileName;
