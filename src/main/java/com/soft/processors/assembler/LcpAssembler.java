@@ -2,9 +2,11 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -35,8 +37,13 @@ public final class LcpAssembler {
   private static final Configuration CONFIG = new Configuration();
   private static String inputFile = "";
 
-  private LcpAssembler() throws IllegalAccessException {
-    throw new IllegalAccessException("This is a utility class and should not be instantiated ");
+  /**
+   * Constructor LcpAssembler.
+   *
+   * @throws InstantiationException if access is not allowed
+   */
+  private LcpAssembler() throws InstantiationException {
+    throw new InstantiationException("This is a utility class and should not be instantiated ");
   }
 
   /**
@@ -129,7 +136,7 @@ public final class LcpAssembler {
         opcode += 1;
       }
       vector = vector.concat(String.format("%1$01X", opcode)
-            + String.format("%1$02X", instr.getOperand()) + " ");
+              + String.format("%1$02X", instr.getOperand()) + " ");
     }
     LOGGER.info(vector, ";");
   }
