@@ -70,7 +70,7 @@ public final class LcpAssembler {
   }
 
   /**
-   * This method check instruction.
+   * This method check instruction and also print listing based on given instruction.
    */
   public static String printListing() {
     String listing = "";
@@ -99,8 +99,7 @@ public final class LcpAssembler {
       if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
         operandStr = "#" + operandStr;
         instructionCode += 1 << config.getInstructionFieldsConfig().getOperandFieldLength();
-      }
-      if (instr.getMode() != AddressMode.Mode.DEFAULT) {
+      } else if (instr.getMode() != AddressMode.Mode.DEFAULT) {
         instructionCode += instr.getOperand();
       }
 
@@ -141,10 +140,9 @@ public final class LcpAssembler {
    *
    * @param fileName name of input file
    * @return input file
+   * @throws IOException if file is not found
    */
-  public static AssemblyResult assemble(String fileName)
-        throws ConfigurationException, IOException {
-
+  public static AssemblyResult assemble(String fileName) throws IOException {
     LcpAssembler.inputFile = fileName;
     config.loadDefaultConfig();
     config.readConfig();
@@ -156,16 +154,14 @@ public final class LcpAssembler {
     }
     outputFile += ".lst";
 
-    if (!LcpAssembler.parseSourceFile(inputFile)) {
-      return new AssemblyResult("", outputFile);
-    }
-
-    if (program.isEmpty()) {
+    if (!parseSourceFile(inputFile)) {
+      return new AssemblyResult("", inputFile);
+    } else if (program.isEmpty()) {
       LOGGER.warn("No instructions were generated. Listing cannot be generated.");
       return new AssemblyResult("", outputFile);
     }
 
-    String listingContent = LcpAssembler.printListing();
+    String listingContent = printListing();
     return new AssemblyResult(listingContent, outputFile);
   }
 }
