@@ -1,7 +1,6 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,11 +28,11 @@ public final class LcpAssembler {
   private static final String ROM_FILE = "ROM.coe";
   private static final Logger LOGGER = LoggerFactory.getLogger(LcpAssembler.class);
   @Getter
-  private static final SymbolTable symbolTable = new SymbolTable();
+  private static final SymbolTable SYMBOL_TABLE = new SymbolTable();
   @Getter
-  private static final ArrayList<Instruction> program = new ArrayList<>();
+  private static final ArrayList<Instruction> PROGRAM = new ArrayList<>();
   @Getter
-  private static final Configuration config = new Configuration();
+  private static final Configuration CONFIG = new Configuration();
   private static String inputFile = "";
 
   private LcpAssembler() throws IllegalAccessException {
@@ -57,14 +56,14 @@ public final class LcpAssembler {
     LcpParser parser = new LcpParser(tokens);
 
     LcpParser.pass = 1;
-    program.clear();
+    PROGRAM.clear();
     ParseTree tree = parser.assemblyProg();
-    LcpParserVisitor visitor = new LcpParserVisitor(symbolTable, program, config);
+    LcpParserVisitor visitor = new LcpParserVisitor(SYMBOL_TABLE, PROGRAM, CONFIG);
     visitor.visit(tree);
-    LOGGER.info("{}", symbolTable);
+    LOGGER.info("{}", SYMBOL_TABLE);
 
     LcpParser.pass = 2;
-    program.clear();
+    PROGRAM.clear();
     visitor.visit(tree);
     return true;
   }
@@ -79,14 +78,14 @@ public final class LcpAssembler {
 
     listing = listing.concat("; Address : Code             ;  Instruction\n\n");
 
-    for (Instruction instr : program) {
+    for (Instruction instr : PROGRAM) {
       String line = "";
       line = line.concat(String.format("%1$02X", pc++));
       line = line.concat("\t\t : ");
       int opcode = instr.getOpcode();
       operandStr = instr.getOperandStr();
 
-      InstructionConfig instructionConfig = config.getInstructionConfig(instr.getOpcodeStr());
+      InstructionConfig instructionConfig = CONFIG.getInstructionConfig(instr.getOpcodeStr());
       if (instructionConfig == null) {
         line = line.concat(String.format("UNKNOWN INSTRUCTION: %s", instr.getOpcodeStr()));
         listing = listing.concat(line + "\r\n");
@@ -94,11 +93,11 @@ public final class LcpAssembler {
       }
 
       int instructionCode;
-      instructionCode = opcode << (config.getInstructionFieldsConfig().getOperandFieldLength()
-              + config.getInstructionFieldsConfig().getAddressingModeFieldLength());
+      instructionCode = opcode << (CONFIG.getInstructionFieldsConfig().getOperandFieldLength()
+              + CONFIG.getInstructionFieldsConfig().getAddressingModeFieldLength());
       if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
         operandStr = "#" + operandStr;
-        instructionCode += 1 << config.getInstructionFieldsConfig().getOperandFieldLength();
+        instructionCode += 1 << CONFIG.getInstructionFieldsConfig().getOperandFieldLength();
       } else if (instr.getMode() != AddressMode.Mode.DEFAULT) {
         instructionCode += instr.getOperand();
       }
@@ -124,7 +123,7 @@ public final class LcpAssembler {
     LOGGER.info("memory_initialization_radix=16 ");
     LOGGER.info("memory_initialization_vector= ");
 
-    for (Instruction instr : program) {
+    for (Instruction instr : PROGRAM) {
       int opcode = instr.getOpcode() << 1;
       if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
         opcode += 1;
@@ -144,8 +143,8 @@ public final class LcpAssembler {
    */
   public static AssemblyResult assemble(String fileName) throws IOException {
     LcpAssembler.inputFile = fileName;
-    config.loadDefaultConfig();
-    config.readConfig();
+    CONFIG.loadDefaultConfig();
+    CONFIG.readConfig();
 
     String outputFile;
     outputFile = ROM_FILE;
@@ -156,7 +155,7 @@ public final class LcpAssembler {
 
     if (!parseSourceFile(inputFile)) {
       return new AssemblyResult("", inputFile);
-    } else if (program.isEmpty()) {
+    } else if (PROGRAM.isEmpty()) {
       LOGGER.warn("No instructions were generated. Listing cannot be generated.");
       return new AssemblyResult("", outputFile);
     }
