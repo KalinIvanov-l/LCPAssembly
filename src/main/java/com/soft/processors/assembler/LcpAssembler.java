@@ -79,45 +79,48 @@ public final class LcpAssembler {
    * This method check instruction and also print listing based on given instruction.
    */
   public static String printListing() {
-    String listing = "";
-    String operandStr;
+    StringBuilder listing = new StringBuilder();
+    listing.append("; Address : Code             ;  Instruction\n\n");
+
     int pc = 0;
-
-    listing = listing.concat("; Address : Code             ;  Instruction\n\n");
-
     for (Instruction instr : PROGRAM) {
-      String line = "";
-      line = line.concat(String.format("%1$02X", pc++));
-      line = line.concat("\t\t : ");
-      int opcode = instr.getOpcode();
-      operandStr = instr.getOperandStr();
-
-      InstructionConfig instructionConfig = CONFIG.getInstructionConfig(instr.getOpcodeStr());
-      if (instructionConfig == null) {
-        line = line.concat(String.format("UNKNOWN INSTRUCTION: %s", instr.getOpcodeStr()));
-        listing = listing.concat(line + "\r\n");
-        continue;
-      }
-
-      int instructionCode;
-      instructionCode = opcode << (CONFIG.getInstructionFieldsConfig().getOperandFieldLength()
-              + CONFIG.getInstructionFieldsConfig().getAddressingModeFieldLength());
-      if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
-        operandStr = "#" + operandStr;
-        instructionCode += 1 << CONFIG.getInstructionFieldsConfig().getOperandFieldLength();
-      } else if (instr.getMode() != AddressMode.Mode.DEFAULT) {
-        instructionCode += instr.getOperand();
-      }
-
-      line = line.concat(String.format("%1$03X", instructionCode));
-      line = line.concat("\t\t; "
-              + (String.format("%1$-5s", instr.getOpcodeStr())) + "\t"
-              + operandStr);
-
-      listing = listing.concat(line + "\r\n");
+      String line = generateListingLine(instr, pc++);
+      listing.append(line).append("\n");
     }
-    LOGGER.info("{}", listing);
-    return listing;
+
+    String listingContent = listing.toString();
+    LOGGER.info("{}", listingContent);
+    return listingContent;
+  }
+
+  private static String generateListingLine(Instruction instr, int programCounter) {
+    StringBuilder line = new StringBuilder();
+    line.append(String.format("%1$02X", programCounter)).append("\t\t : ");
+
+    InstructionConfig instructionConfig = CONFIG.getInstructionConfig(instr.getOpcodeStr());
+    if (instructionConfig == null) {
+      line.append("UNKNOWN INSTRUCTION: ").append(instr.getOpcodeStr());
+      return line.toString();
+    }
+
+    int opcode = instr.getOpcode() << (CONFIG.getInstructionFieldsConfig().getOperandFieldLength()
+            + CONFIG.getInstructionFieldsConfig().getAddressingModeFieldLength());
+    String operandStr = instr.getOperandStr();
+
+    if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
+      operandStr = "#" + operandStr;
+      opcode += 1 << CONFIG.getInstructionFieldsConfig().getOperandFieldLength();
+    } else if (instr.getMode() != AddressMode.Mode.DEFAULT) {
+      opcode += instr.getOperand();
+    }
+
+    line.append(String.format("%1$03X", opcode))
+            .append("\t\t; ")
+            .append(String.format("%1$-5s", instr.getOpcodeStr()))
+            .append("\t")
+            .append(operandStr);
+
+    return line.toString();
   }
 
   /**
