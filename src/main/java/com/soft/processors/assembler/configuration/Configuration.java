@@ -39,6 +39,9 @@ public class Configuration {
    * @return the instruction configuration, or null if the mnemonic is not found
    */
   public InstructionConfig getInstructionConfig(String key) {
+    if (instructionConfigMap.isEmpty()) {
+      throw new IllegalArgumentException("Instruction cannot be empty ");
+    }
     if (instructionConfigMap.containsKey(key)) {
       return instructionConfigMap.get(key);
     }
@@ -53,6 +56,14 @@ public class Configuration {
     instructionFieldsConfig = readInstructionFieldsConfig(configObj);
     instructionConfigMap = readInstructionConfigMap(configObj);
     LOGGER.info("Configuration read: OK");
+  }
+
+  /**
+   * Initializes the instructionFieldsConfig and instructionConfigMap with default values.
+   */
+  public void loadDefaultConfig() {
+    instructionFieldsConfig = new InstructionFieldsConfig(3, 1, 8);
+    instructionConfigMap = new HashMap<>();
   }
 
   /**
@@ -100,7 +111,7 @@ public class Configuration {
    *
    * @param configObj The JsonObject containing the instruction configuration map.
    * @return A HashMap containing InstructionConfig objects with mnemonic as keys and the
-   *         corresponding configuration data as values.
+   * corresponding configuration data as values.
    */
   private HashMap<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
     HashMap<String, InstructionConfig> configHashMap = new HashMap<>();
@@ -117,13 +128,5 @@ public class Configuration {
     }
 
     return configHashMap;
-  }
-
-  /**
-   * Initializes the instructionFieldsConfig and instructionConfigMap with default values.
-   */
-  public void loadDefaultConfig() {
-    instructionFieldsConfig = new InstructionFieldsConfig(3, 1, 8);
-    instructionConfigMap = new HashMap<>();
   }
 }
