@@ -22,6 +22,7 @@
         <junit.version>5.9.3</junit.version>
         <checkstyle.version>10.12.0</checkstyle.version>
         <mockito.core-version>5.3.1</mockito.core-version>
+        <sonar.plugin.api-version>10.0.0.695</sonar.plugin.api-version>
     </properties>
 
     <dependencyManagement>
@@ -79,6 +80,13 @@
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.core-version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.sonarsource.api.plugin</groupId>
+                <artifactId>sonar-plugin-api</artifactId>
+                <version>${sonar.plugin.api-version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -162,6 +170,11 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonarsource.api.plugin</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
         </dependency>
     </dependencies>
 
