@@ -2,11 +2,9 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -128,10 +126,7 @@ public final class LcpAssembler {
    */
   public static void printCoefficientFile() {
     String vector = "";
-    LOGGER.info("ROM.coe initialization file ");
-    LOGGER.info("Block memory depth=256, width=12 ");
-    LOGGER.info("memory_initialization_radix=16 ");
-    LOGGER.info("memory_initialization_vector= ");
+    printDetailsMemory();
 
     for (Instruction instr : PROGRAM) {
       int opcode = instr.getOpcode() << 1;
@@ -172,5 +167,12 @@ public final class LcpAssembler {
 
     String listingContent = printListing();
     return new AssemblyResult(listingContent, outputFile);
+  }
+
+  private static void printDetailsMemory() {
+    LOGGER.info("ROM.coe initialization file ");
+    LOGGER.info("Block memory depth=256, width=12 ");
+    LOGGER.info("memory_initialization_radix=16 ");
+    LOGGER.info("memory_initialization_vector= ");
   }
 }
