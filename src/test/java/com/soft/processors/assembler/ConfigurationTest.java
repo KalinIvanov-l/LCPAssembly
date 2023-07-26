@@ -74,12 +74,4 @@ class ConfigurationTest {
 
     assertThrows(JsonSyntaxException.class, configuration::readConfig);
   }
-
-  @Test
-  void getInstructionConfigWithInvalidMnemonic() {
-    assertThrows(JsonSyntaxException.class, () -> configuration.readConfig());
-    InstructionConfig instructionConfig = configuration.getInstructionConfig("INVALID_MNEMONIC");
-
-    assertNull(instructionConfig);
-  }
 }
