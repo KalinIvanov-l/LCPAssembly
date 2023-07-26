@@ -28,7 +28,7 @@ public class InstructionFieldsConfig {
    */
   public InstructionFieldsConfig(Integer opcodeFieldLength,
                                  Integer addressingModeFieldLength, Integer operandFieldLength) {
-    super();
+
     this.opcodeFieldLength = opcodeFieldLength;
     this.addressingModeFieldLength = addressingModeFieldLength;
     this.operandFieldLength = operandFieldLength;
