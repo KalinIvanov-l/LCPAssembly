@@ -27,7 +27,6 @@ public class InstructionConfig {
    * @param addressingModes the number of addressing modes supported by the instruction
    */
   public InstructionConfig(String mnemocode, Integer opcode, Integer addressingModes) {
-    super();
     this.mnemocode = mnemocode;
     this.opcode = opcode;
     this.addressingModes = addressingModes;
