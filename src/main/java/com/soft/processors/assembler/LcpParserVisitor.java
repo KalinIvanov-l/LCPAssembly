@@ -26,7 +26,9 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
    * @param program     the program
    * @param config      the config
    */
-  public LcpParserVisitor(SymbolTable symbolTable, List<Instruction> program, Configuration config) {
+  public LcpParserVisitor(
+          SymbolTable symbolTable, List<Instruction> program, Configuration config) {
+
     this.symbolTable = symbolTable;
     this.program = (ArrayList<Instruction>) program;
     this.config = config;
