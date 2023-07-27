@@ -110,8 +110,8 @@ public class Configuration {
    * containing InstructionConfig objects with the extracted data.
    *
    * @param configObj The JsonObject containing the instruction configuration map.
-   * @return A HashMap containing InstructionConfig objects with mnemonic as keys and the
-   * corresponding configuration data as values.
+   * @return A HashMap containing InstructionConfig objects with mnemonic
+   *         as keys and the corresponding configuration data as values.
    */
   private HashMap<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
     HashMap<String, InstructionConfig> configHashMap = new HashMap<>();
