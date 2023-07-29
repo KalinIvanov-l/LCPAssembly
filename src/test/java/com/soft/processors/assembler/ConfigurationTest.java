@@ -74,4 +74,12 @@ class ConfigurationTest {
 
     assertThrows(JsonSyntaxException.class, configuration::readConfig);
   }
+
+  @Test
+  void validateInstructionConfigMap() {
+    HashMap<String, InstructionConfig> instructionConfigMap = new HashMap<>();
+    configuration.setInstructionConfigMap(instructionConfigMap);
+
+    assertThrows(IllegalArgumentException.class, () -> configuration.getInstructionConfig(""));
+  }
 }
