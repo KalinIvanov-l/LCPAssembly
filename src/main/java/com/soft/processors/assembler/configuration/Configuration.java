@@ -39,13 +39,8 @@ public class Configuration {
    * @return the instruction configuration, or null if the mnemonic is not found
    */
   public InstructionConfig getInstructionConfig(String key) {
-    if (instructionConfigMap.isEmpty()) {
-      throw new IllegalArgumentException("Instruction cannot be empty ");
-    }
-    if (instructionConfigMap.containsKey(key)) {
-      return instructionConfigMap.get(key);
-    }
-    return null;
+    validateInstructionConfigMap();
+    return instructionConfigMap.getOrDefault(key, null);
   }
 
   /**
@@ -67,6 +62,15 @@ public class Configuration {
   }
 
   /**
+   * Provides simple check for instruction.
+   */
+  private void validateInstructionConfigMap() {
+    if (instructionConfigMap.isEmpty()) {
+      throw new IllegalArgumentException("Instruction configuration map cannot be empty.");
+    }
+  }
+
+  /**
    * Reads the content of the configuration file and parses it into a JsonObject.
    *
    * @return The JsonObject containing the configuration data.
@@ -74,6 +78,17 @@ public class Configuration {
    */
   private JsonObject readConfigFile() throws IOException {
     File configFile = new File(cfgFILE);
+    return parseJsonFile(configFile);
+  }
+
+  /**
+   * Provides implementation for read given configuration file.
+   *
+   * @param configFile the given file
+   * @return The JsonObject containing the configuration data.
+   * @throws IOException if an I/O error occurs while reading the configuration file.
+   */
+  private JsonObject parseJsonFile(File configFile) throws IOException {
     StringBuilder jsonBuilder = new StringBuilder();
 
     try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
@@ -126,7 +141,6 @@ public class Configuration {
               mnemocode, opcode, addressingModes);
       configHashMap.put(mnemocode, instructionConfig);
     }
-
     return configHashMap;
   }
 }
