@@ -80,15 +80,52 @@ public final class LcpAssembler {
     StringBuilder listing = new StringBuilder();
     listing.append("; Address : Code             ;  Instruction\n\n");
 
-    int pc = 0;
+    int counter = 0;
     for (Instruction instr : PROGRAM) {
-      String line = generateListingLine(instr, pc++);
+      String line = generateListingLine(instr, counter++);
       listing.append(line).append("\n");
     }
 
     String listingContent = listing.toString();
     LOGGER.info("{}", listingContent);
     return listingContent;
+  }
+
+  /**
+   * This method read the input file name and parse the source file.
+   *
+   * @param fileName name of input file
+   * @return input file
+   * @throws IOException if an I/O error occurs while reading the configuration file.
+   */
+  public static AssemblyResult assemble(String fileName) throws IOException {
+    checkFileName(fileName);
+    LcpAssembler.inputFile = fileName;
+    CONFIG.loadDefaultConfig();
+    CONFIG.readConfig();
+
+    String outputFile;
+    outputFile = ROM_FILE;
+    if (inputFile.contains(".")) {
+      outputFile = inputFile.substring(0, inputFile.lastIndexOf('.'));
+    }
+    outputFile += ".lst";
+
+    if (!parseSourceFile(inputFile)) {
+      return new AssemblyResult("", inputFile);
+    } else if (PROGRAM.isEmpty()) {
+      LOGGER.warn("No instructions were generated. Listing cannot be generated.");
+      return new AssemblyResult("", outputFile);
+    }
+
+    String listingContent = printListing();
+    return new AssemblyResult(listingContent, outputFile);
+  }
+
+  private static void checkFileName(String filName) {
+    if (filName.isEmpty()) {
+      throw new IllegalArgumentException("Provided string file is empty ");
+    }
   }
 
   private static String generateListingLine(Instruction instr, int programCounter) {
@@ -121,58 +158,28 @@ public final class LcpAssembler {
     return line.toString();
   }
 
-  /**
-   * Prints the ROM.coe initialization file for the program's instruction coefficients.
-   */
-  public static void printCoefficientFile() {
-    String vector = "";
-    printDetailsMemory();
-
-    for (Instruction instr : PROGRAM) {
-      int opcode = instr.getOpcode() << 1;
-      if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
-        opcode += 1;
-      }
-      vector = vector.concat(String.format("%1$01X", opcode)
-              + String.format("%1$02X", instr.getOperand()) + " ");
-    }
-    LOGGER.info(vector, ";");
-  }
-
-  /**
-   * This method read the input file name and parse the source file.
-   *
-   * @param fileName name of input file
-   * @return input file
-   * @throws IOException if an I/O error occurs while reading the configuration file.
-   */
-  public static AssemblyResult assemble(String fileName) throws IOException {
-    LcpAssembler.inputFile = fileName;
-    CONFIG.loadDefaultConfig();
-    CONFIG.readConfig();
-
-    String outputFile;
-    outputFile = ROM_FILE;
-    if (inputFile.contains(".")) {
-      outputFile = inputFile.substring(0, inputFile.lastIndexOf('.'));
-    }
-    outputFile += ".lst";
-
-    if (!parseSourceFile(inputFile)) {
-      return new AssemblyResult("", inputFile);
-    } else if (PROGRAM.isEmpty()) {
-      LOGGER.warn("No instructions were generated. Listing cannot be generated.");
-      return new AssemblyResult("", outputFile);
-    }
-
-    String listingContent = printListing();
-    return new AssemblyResult(listingContent, outputFile);
-  }
-
-  private static void printDetailsMemory() {
-    LOGGER.info("ROM.coe initialization file ");
-    LOGGER.info("Block memory depth=256, width=12 ");
-    LOGGER.info("memory_initialization_radix=16 ");
-    LOGGER.info("memory_initialization_vector= ");
-  }
+//  /**
+//   * Prints the ROM.coe initialization file for the program's instruction coefficients.
+//   */
+//  public static void printCoefficientFile() {
+//    String vector = "";
+//    printDetailsMemory();
+//
+//    for (Instruction instr : PROGRAM) {
+//      int opcode = instr.getOpcode() << 1;
+//      if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
+//        opcode += 1;
+//      }
+//      vector = vector.concat(String.format("%1$01X", opcode)
+//              + String.format("%1$02X", instr.getOperand()) + " ");
+//    }
+//    LOGGER.info(vector, ";");
+//  }
+//
+//  private static void printDetailsMemory() {
+//    LOGGER.info("ROM.coe initialization file ");
+//    LOGGER.info("Block memory depth=256, width=12 ");
+//    LOGGER.info("memory_initialization_radix=16 ");
+//    LOGGER.info("memory_initialization_vector= ");
+//  }
 }
