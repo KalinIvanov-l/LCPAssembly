@@ -2,9 +2,11 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -122,8 +124,13 @@ public final class LcpAssembler {
     return new AssemblyResult(listingContent, outputFile);
   }
 
-  private static void checkFileName(String filName) {
-    if (filName.isEmpty()) {
+  /**
+   * Validates provided file name.
+   *
+   * @param fileName the given string file
+   */
+  private static void checkFileName(String fileName) {
+    if (fileName.isEmpty()) {
       throw new IllegalArgumentException("Provided string file is empty ");
     }
   }
@@ -139,7 +146,7 @@ public final class LcpAssembler {
     }
 
     int opcode = instr.getOpcode() << (CONFIG.getInstructionFieldsConfig().getOperandFieldLength()
-            + CONFIG.getInstructionFieldsConfig().getAddressingModeFieldLength());
+        + CONFIG.getInstructionFieldsConfig().getAddressingModeFieldLength());
     String operandStr = instr.getOperandStr();
 
     if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
@@ -150,10 +157,10 @@ public final class LcpAssembler {
     }
 
     line.append(String.format("%1$03X", opcode))
-            .append("\t\t; ")
-            .append(String.format("%1$-5s", instr.getOpcodeStr()))
-            .append("\t")
-            .append(operandStr);
+        .append("\t\t; ")
+        .append(String.format("%1$-5s", instr.getOpcodeStr()))
+        .append("\t")
+        .append(operandStr);
 
     return line.toString();
   }
