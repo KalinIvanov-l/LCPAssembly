@@ -2,11 +2,9 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -80,7 +78,7 @@ public final class LcpAssembler {
    */
   public static String printListing() {
     StringBuilder listing = new StringBuilder();
-    listing.append("; Address : Code             ;  Instruction\n\n");
+    listing.append("; Address : Machine Code                   ;  Instruction\n\n");
 
     int counter = 0;
     for (Instruction instr : PROGRAM) {
@@ -157,36 +155,11 @@ public final class LcpAssembler {
     }
 
     line.append(String.format("%1$03X", opcode))
-        .append("\t\t; ")
+        .append("\t\t\t\t\t\t\t\t\t\t\t\t; ")
         .append(String.format("%1$-5s", instr.getOpcodeStr()))
-        .append("\t")
+        .append("\t\t\t")
         .append(operandStr);
 
     return line.toString();
   }
-
-//  /**
-//   * Prints the ROM.coe initialization file for the program's instruction coefficients.
-//   */
-//  public static void printCoefficientFile() {
-//    String vector = "";
-//    printDetailsMemory();
-//
-//    for (Instruction instr : PROGRAM) {
-//      int opcode = instr.getOpcode() << 1;
-//      if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
-//        opcode += 1;
-//      }
-//      vector = vector.concat(String.format("%1$01X", opcode)
-//              + String.format("%1$02X", instr.getOperand()) + " ");
-//    }
-//    LOGGER.info(vector, ";");
-//  }
-//
-//  private static void printDetailsMemory() {
-//    LOGGER.info("ROM.coe initialization file ");
-//    LOGGER.info("Block memory depth=256, width=12 ");
-//    LOGGER.info("memory_initialization_radix=16 ");
-//    LOGGER.info("memory_initialization_vector= ");
-//  }
 }
