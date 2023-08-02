@@ -104,7 +104,7 @@ public class LcpParser extends Parser {
   }
 
 
-  public static Integer pass = 1;
+  public static int pass = 1;
 
   public LcpParser(TokenStream input) {
     super(input);
