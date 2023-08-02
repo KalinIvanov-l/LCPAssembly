@@ -2,6 +2,8 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -130,6 +132,11 @@ public final class LcpAssembler {
   private static void checkFileName(String fileName) {
     if (fileName.isEmpty()) {
       throw new IllegalArgumentException("Provided string file is empty ");
+    }
+
+    File file = new File(fileName);
+    if (!file.exists() || !file.isFile() || !file.canRead()) {
+      throw new IllegalArgumentException("File does not exist or is not readable: " + fileName);
     }
   }
 
