@@ -2,7 +2,6 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
