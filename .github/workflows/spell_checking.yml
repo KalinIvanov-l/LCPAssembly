@@ -25,4 +25,4 @@ jobs:
       - name: Install
         run: wget -O - -q https://raw.githubusercontent.com/client9/misspell/master/install-misspell.sh | sh -s -- -b .
       - name: Misspell
-        run: git ls-files --empty-directory | xargs ./misspell -i 'enviromnent' -error
+        run: git ls-files --empty-directory | xargs ./misspell -i 'environment' -error
