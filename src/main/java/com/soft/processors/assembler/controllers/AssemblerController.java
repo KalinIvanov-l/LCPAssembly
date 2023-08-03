@@ -44,29 +44,13 @@ public class AssemblerController {
     LOGGER.info("Received file content: {}", fileContent);
     try {
       Path tempFile = createTempFileFromContent(fileContent);
-
       LOGGER.info("Assembling the file: {}", tempFile);
-
       AssemblyResult assemblyResult = LcpAssembler.assemble(tempFile.toString());
       Files.delete(tempFile);
-
       LOGGER.info("Output file generated: {}", assemblyResult.getOutputFile());
-
-      Map<String, Object> response = new HashMap<>();
-      response.put("listing", assemblyResult.getListing());
-      response.put("consoleOutput", assemblyResult.getOutputFile());
-      response.put("logs", assemblyResult.getLogs());
-      return ResponseEntity.ok(response);
-    } catch (IOException e) {
-      LOGGER.error("Error processing the file: {}", e.getMessage(), e);
-      Map<String, Object> errorResponse = new HashMap<>();
-      errorResponse.put(MESSAGE_ERROR, "Error processing the file");
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+      return createSuccessfulResponse(assemblyResult);
     } catch (Exception e) {
-      LOGGER.error("Error occurred during assembly: {}", e.getMessage(), e);
-      Map<String, Object> errorResponse = new HashMap<>();
-      errorResponse.put(MESSAGE_ERROR, "Error occurred during assembly: " + e.getMessage());
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+      return handleException(e, "Error occurred during assembly: ");
     }
   }
 
@@ -79,16 +63,10 @@ public class AssemblerController {
   @PostMapping("/saveFile")
   public ResponseEntity<Map<String, String>> saveFile(@RequestBody String fileData) {
     try {
-      try (FileOutputStream fos = new FileOutputStream(TEST_FILE_PATH)) {
-        fos.write(fileData.getBytes());
-      }
-      Map<String, String> response = new HashMap<>();
-      response.put("message", "File saved successfully.");
-      return ResponseEntity.ok(response);
+      writeToFile(fileData, new FileOutputStream(TEST_FILE_PATH));
+      return createResponseMessage();
     } catch (IOException e) {
-      Map<String, String> errorResponse = new HashMap<>();
-      errorResponse.put(MESSAGE_ERROR, "Error occurred while saving the file: " + e.getMessage());
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+      return handleException(e, "Error occurred while saving the file: ");
     }
   }
 
@@ -99,30 +77,96 @@ public class AssemblerController {
    */
   @GetMapping("/loadFile")
   public ResponseEntity<String> loadFile() {
-    LOGGER.info("Current working directory: {}", System.getProperty("user.dir"));
-
     try {
-      Path path = Paths.get(TEST_FILE_PATH);
-      LOGGER.info("Attempting to load file from path: {}", path);
-
-      if (!Files.exists(path)) {
-        LOGGER.info("File does not exist, creating a new file at path: {}", path);
-        Files.createFile(path);
-      }
-
-      String fileContent = Files.readString(path, StandardCharsets.UTF_8);
-      LOGGER.info("File loaded successfully");
-      return ResponseEntity.ok(fileContent);
+      return ResponseEntity.ok(loadFileContent());
     } catch (IOException e) {
-      LOGGER.error("Error occurred while loading the file: {}", e.getMessage(), e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-              "Error occurred while loading the file: " + e.getMessage());
+      return handleException(e, "Error occurred while loading the file: ");
     }
   }
 
+  /**
+   * Creates a temporary file with the specified content and returns its path.
+   *
+   * @param fileContent The content to be written to the temporary file.
+   * @return The path to the newly created temporary file.
+   * @throws IOException If an I/O error occurs while creating or writing to the temporary file.
+   */
   private Path createTempFileFromContent(String fileContent) throws IOException {
     Path tempFile = Files.createTempFile("assembler-", ".tmp");
     Files.writeString(tempFile, fileContent);
     return tempFile;
+  }
+
+  /**
+   * Writes the provided data to a FileOutputStream, ensuring proper resource management.
+   *
+   * @param data The data to be written to the file.
+   * @param fos The FileOutputStream to write the data to.
+   *          It will be automatically closed(try with resources) after writing.
+   * @throws IOException If an I/O error occurs while writing to the file.
+   */
+  private void writeToFile(String data, FileOutputStream fos) throws IOException {
+    try (fos) {
+      fos.write(data.getBytes());
+    }
+  }
+
+  /**
+   * Loads the content of a given file, creating the file if it does not exist.
+   *
+   * @return The content of the file as a string.
+   * @throws IOException If an I/O error occurs while loading or creating the file.
+   */
+  private String loadFileContent() throws IOException {
+    Path path = Paths.get(TEST_FILE_PATH);
+    LOGGER.info("Attempting to load file from path: {}", path);
+    if (!Files.exists(path)) {
+      LOGGER.info("File does not exist, creating a new file at path: {}", path);
+      Files.createFile(path);
+    }
+    LOGGER.info("File loaded successfully");
+    return Files.readString(path, StandardCharsets.UTF_8);
+  }
+
+  /**
+   * Handles an exception by logging an error, creating an error response,
+   * and generating an appropriate ResponseEntity with an HTTP 500 Internal Server Error status.
+   *
+   * @param e            The exception to be handled.
+   * @param messagePrefix provide exception message in log and error response.
+   * @param <T>          The type of the response body.
+   * @return containing an error response with a status of HTTP 500 Internal Server Error.
+   */
+  private <T> ResponseEntity<T> handleException(Exception e, String messagePrefix) {
+    LOGGER.error("{}{}", messagePrefix, e.getMessage(), e);
+    Map<String, String> errorResponse = new HashMap<>();
+    errorResponse.put(MESSAGE_ERROR, messagePrefix + e.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((T) errorResponse);
+  }
+
+  /**
+   * Creates a ResponseEntity containing a successful response based on the provided AssemblyResult.
+   *
+   * @param assemblyResult containing listing, console output, and logs.
+   * @return A ResponseEntity with a success status and a map containing assembled data.
+   */
+  private ResponseEntity<Map<String, Object>> createSuccessfulResponse(
+      AssemblyResult assemblyResult) {
+    Map<String, Object> response = new HashMap<>();
+    response.put("listing", assemblyResult.getListing());
+    response.put("consoleOutput", assemblyResult.getOutputFile());
+    response.put("logs", assemblyResult.getLogs());
+    return ResponseEntity.ok(response);
+  }
+
+  /**
+   * Creates a ResponseEntity containing a response message indicating a successful operation.
+   *
+   * @return A ResponseEntity with a success status and a map containing a success message.
+   */
+  private ResponseEntity<Map<String, String>> createResponseMessage() {
+    Map<String, String> response = new HashMap<>();
+    response.put("message", "File saved successfully.");
+    return ResponseEntity.ok(response);
   }
 }
