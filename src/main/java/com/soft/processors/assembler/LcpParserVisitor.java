@@ -102,7 +102,7 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
       instr.setOpcode(0);
       instr.setOpcodeStr(mnemocode);
     }
-    return instr;
+    return super.visitInstrOnly(ctx);
   }
 
   @Override
@@ -133,11 +133,11 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
       String mnemocode = ctx.INSTR().getText().trim();
       InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
       instr.setMode(AddressMode.Mode.ABSOLUTE);
-      instr.setOperand(symbolTable.getSymbolValue(ctx.LABEL().getText().trim()));
-      instr.setOperandStr(ctx.LABEL().getText().trim());
       if (instructionConfig != null) {
         instr.setOpcode(instructionConfig.getOpcode());
         instr.setOpcodeStr(instructionConfig.getMnemocode());
+        instr.setOperand(symbolTable.getSymbolValue(ctx.LABEL().getText().trim()));
+        instr.setOperandStr(ctx.LABEL().getText().trim());
       } else {
         instr.setOpcode(0);
         instr.setOpcodeStr(mnemocode);
