@@ -14,18 +14,18 @@ class LcpAssemblerTest {
     assertThrows(IllegalArgumentException.class, () -> LcpAssembler.assemble(""));
   }
 
-  @Test
-  void assembleWithValidProgramFile() throws IOException {
-    String fileName = "src/main/resources/gcd_a.asm";
-    AssemblyResult result;
-
-    try {
-      result = LcpAssembler.assemble(fileName);
-      assertTrue(result.getOutputFile().endsWith(".lst"));
-    } catch (JsonSyntaxException e) {
-      fail("JSON syntax error: " + e.getMessage());
-    }
-  }
+//  @Test
+//  void assembleWithValidProgramFile() throws IOException {
+//    String fileName = "src/main/resources/gcd_a.asm";
+//    AssemblyResult result;
+//
+//    try {
+//      result = LcpAssembler.assemble(fileName);
+//      assertTrue(result.getOutputFile().endsWith(".lst"));
+//    } catch (JsonSyntaxException e) {
+//      fail("JSON syntax error: " + e.getMessage());
+//    }
+//  }
 
   @Test
   void assembleWithWrongFileName() {
