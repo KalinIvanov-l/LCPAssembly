@@ -91,7 +91,7 @@ public class AssemblerController {
    * @return The path to the newly created temporary file.
    * @throws IOException If an I/O error occurs while creating or writing to the temporary file.
    */
-  private Path createTempFileFromContent(String fileContent) throws IOException {
+  public Path createTempFileFromContent(String fileContent) throws IOException {
     Path tempFile = Files.createTempFile("assembler-", ".tmp");
     Files.writeString(tempFile, fileContent);
     return tempFile;
@@ -105,7 +105,7 @@ public class AssemblerController {
    *          It will be automatically closed(try with resources) after writing.
    * @throws IOException If an I/O error occurs while writing to the file.
    */
-  private void writeToFile(String data, FileOutputStream fos) throws IOException {
+  public void writeToFile(String data, FileOutputStream fos) throws IOException {
     try (fos) {
       fos.write(data.getBytes());
     }
@@ -117,7 +117,7 @@ public class AssemblerController {
    * @return The content of the file as a string.
    * @throws IOException If an I/O error occurs while loading or creating the file.
    */
-  private String loadFileContent() throws IOException {
+  public String loadFileContent() throws IOException {
     Path path = Paths.get(TEST_FILE_PATH);
     LOGGER.info("Attempting to load file from path: {}", path);
     if (!Files.exists(path)) {
