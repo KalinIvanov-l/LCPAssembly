@@ -1,10 +1,12 @@
 package com.soft.processors.assembler;
 
+import com.google.gson.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class LcpAssemblerTest {
   @Test
@@ -15,9 +17,14 @@ class LcpAssemblerTest {
   @Test
   void assembleWithValidProgramFile() throws IOException {
     String fileName = "src/main/resources/gcd_a.asm";
-    AssemblyResult result = LcpAssembler.assemble(fileName);
+    AssemblyResult result;
 
-    assertTrue(result.getOutputFile().endsWith(".lst"));
+    try {
+      result = LcpAssembler.assemble(fileName);
+      assertTrue(result.getOutputFile().endsWith(".lst"));
+    } catch (JsonSyntaxException e) {
+      fail("JSON syntax error: " + e.getMessage());
+    }
   }
 
   @Test
