@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LcpAssemblerTest {
   @Test
-  void checkStringFile() {
+  void checkWithEmptyStringFile() {
     assertThrows(IllegalArgumentException.class, () -> LcpAssembler.assemble(""));
   }
 
