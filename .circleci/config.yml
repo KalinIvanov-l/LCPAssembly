@@ -21,17 +21,13 @@ jobs:
   # Add a new job for running the Dependency-Check
   dependency-check:
     docker:
-      - image: maven:3.8.1-jdk-11
+      - image: maven:3.8.1-jdk-17
     steps:
       - checkout
       - run:
           name: "Run Dependency-Check"
           command: |
             mvn org.owasp:dependency-check-maven:check
-    # Save the reports as artifacts
-    artifacts:
-      paths:
-        - target/dependency-check-report
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
