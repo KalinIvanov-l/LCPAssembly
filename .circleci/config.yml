@@ -19,19 +19,18 @@ jobs:
           command: "echo Hi!"
 
   # Add a new job for running the Dependency-Check
-dependency-check:
-  docker:
-    - image: maven:3.8.1-jdk-17
-  steps:
-    - checkout
-    - setup_remote_docker:
-    - run:
-        name: Pull Docker Image
-        command: docker pull maven:3.8.1-jdk-17
-    - run:
-        name: "Run Dependency-Check"
-        command: |
-          mvn org.owasp:dependency-check-maven:check
+  dependency-check:
+    docker:
+      - image: maven:3.8.1-jdk-17
+    steps:
+      - checkout
+      - run:
+          name: Pull Docker Image
+          command: docker pull maven:3.8.1-jdk-17
+      - run:
+          name: "Run Dependency-Check"
+          command: |
+            mvn org.owasp:dependency-check-maven:check
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
