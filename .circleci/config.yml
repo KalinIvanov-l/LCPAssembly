@@ -21,7 +21,7 @@ jobs:
   # Add a new job for running the Dependency-Check
   dependency-check:
     docker:
-      - image: maven:3.8.4-jdk-17
+      - image: cimg/base:stable
     steps:
       - checkout
       - run:
