@@ -21,7 +21,7 @@ jobs:
   # Add a new job for running the Dependency-Check
   dependency-check:
     docker:
-      - image: maven:3.8.1-jdk-17
+      - image: registry.gitlab.com/library/maven:3.8.1-jdk-17
     steps:
       - checkout
       - run:
