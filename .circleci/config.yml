@@ -15,27 +15,9 @@ jobs:
           name: "Initial"
           command: "echo Hi!"
 
-  # Add a new job for running the Dependency-Check
-  dependency-check:
-    docker:
-      - image: circleci/openjdk:17
-    steps:
-      - checkout
-      - run:
-          name: "Install Maven"
-          command: sudo apt-get update && sudo apt-get install -y maven
-      - run:
-          name: "Run Dependency-Check"
-          command: |
-            mvn org.owasp:dependency-check-maven:check
-
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   init-workflow:
     jobs:
       - initial
-      # Add the dependency-check job to the workflow
-      - dependency-check:
-          requires:
-            - initial
