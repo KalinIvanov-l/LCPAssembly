@@ -1,4 +1,4 @@
-package com.soft.processors.assembler;
+package com.soft.processors.assembler.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

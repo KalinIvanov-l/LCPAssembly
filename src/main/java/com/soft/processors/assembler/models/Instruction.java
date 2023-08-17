@@ -1,5 +1,6 @@
-package com.soft.processors.assembler;
+package com.soft.processors.assembler.models;
 
+import com.soft.processors.assembler.models.AddressMode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

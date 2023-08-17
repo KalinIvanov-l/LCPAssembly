@@ -1,7 +1,7 @@
 package com.soft.processors.assembler.controllers;
 
-import com.soft.processors.assembler.AssemblyResult;
 import com.soft.processors.assembler.LcpAssembler;
+import com.soft.processors.assembler.models.AssemblyResult;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
