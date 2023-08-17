@@ -119,9 +119,9 @@ public class AssemblerController {
    */
   public String loadFileContent() throws IOException {
     Path path = Paths.get(TEST_FILE_PATH);
-    LOGGER.info("Attempting to load file from path: {}", path);
+    LOGGER.info("Attempting to load file from a path: {}", path);
     if (!Files.exists(path)) {
-      LOGGER.info("File does not exist, creating a new file at path: {}", path);
+      LOGGER.info("File does not exist, creating a new file at a path: {}", path);
       Files.createFile(path);
     }
     LOGGER.info("File loaded successfully");

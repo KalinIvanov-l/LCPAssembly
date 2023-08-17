@@ -1,25 +1,14 @@
-[2m2023-06-22T16:53:58.992+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 
  Symbol Table: { a=00h, b=01h, temp=02h, L1=02h, L2=06h, L3=0Fh, L4=13h, }
 
-[2m2023-06-22T16:53:58.993+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m ; Address : Code	; Instruction
-[2m2023-06-22T16:53:58.993+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 01		 : 
-[2m2023-06-22T16:53:58.993+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 02		 : 
-[2m2023-06-22T16:53:58.994+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 03		 : 
-[2m2023-06-22T16:53:58.994+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 05		 : 
-[2m2023-06-22T16:53:58.994+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 06		 : 
-[2m2023-06-22T16:53:58.994+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 07		 : 
-[2m2023-06-22T16:53:58.994+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 08		 : 
-[2m2023-06-22T16:53:58.994+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 09		 : 
-[2m2023-06-22T16:53:58.995+03:00[0;39m [32m INFO[0;39m [35m3389026[0;39m [2m---[0;39m [2m[  restartedMain][0;39m [36mc.s.processors.assembler.LCPAssembler   [0;39m [2m:[0;39m 00		 : A00		; INP  	null
-01		 : 400		; STORE	null
-02		 : 200		; LOAD 	null
-03		 : 400		; STORE	null
-04		 : A00		; INP  	null
-05		 : 400		; STORE	null
-06		 : 200		; LOAD 	null
-07		 : 600		; NOR  	null
-08		 : 800		; ADD  	null
-09		 : 800		; ADD  	null
+01		 : 400		; STORE
+02		 : 200		; LOAD 	
+03		 : 400		; STORE	
+04		 : A00		; INP  	
+05		 : 400		; STORE	
+06		 : 200		; LOAD 	
+07		 : 600		; NOR  	
+08		 : 800		; ADD  	
+09		 : 800		; ADD  	
 0A		 : E0F		; JCC  	L3
 0B		 : 40F		; STORE	L3
 0C		 : 80F		; ADD  	L3
