@@ -2,13 +2,12 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.listing.ListingGenerator;
+import com.soft.processors.assembler.models.AssemblyResult;
+import com.soft.processors.assembler.models.Instruction;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import com.soft.processors.assembler.models.AssemblyResult;
-import com.soft.processors.assembler.models.Instruction;
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.ANTLRInputStream;
