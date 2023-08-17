@@ -1,7 +1,7 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.configuration.InstructionConfig;
+import com.soft.processors.assembler.listing.ListingGenerator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * This class represents an assembler for the LCP (Little Computer Processor) architecture.
  * It contains methods for parsing a source file, generating a symbol table,
  * and generating a listing file && a coefficient file.
- * The assembler includes two passes - the first pass generates a symbol table
+ * The assembler includes two passes - the first pass generates a symbol table,
  * and the second pass generates the actual machine code.
  *
  * @author kalin
@@ -47,9 +47,9 @@ public final class LcpAssembler {
 
   /**
    * This method contains execution of two passes.
-   * First is create a lexer that feed off of input stream.
+   * First is create a lexer that feeds off of input stream.
    * Also create a buffer of tokens pulled from lexer and create symbol table.
-   * Second visit tree and generate source.
+   * Second visit tree and generate a source.
    *
    * @param sourceFile example file for program
    * @return if parse successes return true
@@ -74,23 +74,6 @@ public final class LcpAssembler {
     return true;
   }
 
-  /**
-   * This method check instruction and also print listing based on given instruction.
-   */
-  public static String printListing() {
-    StringBuilder listing = new StringBuilder();
-    listing.append("; Address : Machine Code                   ;  Instruction\n\n");
-
-    int counter = 0;
-    for (Instruction instr : PROGRAM) {
-      String line = generateListingLine(instr, counter++);
-      listing.append(line).append("\n");
-    }
-
-    String listingContent = listing.toString();
-    LOGGER.info("{}", listingContent);
-    return listingContent;
-  }
 
   /**
    * This method read the input file name and parse the source file.
@@ -119,7 +102,7 @@ public final class LcpAssembler {
       return new AssemblyResult("", outputFile);
     }
 
-    String listingContent = printListing();
+    String listingContent = ListingGenerator.generateListing(PROGRAM, CONFIG);
     return new AssemblyResult(listingContent, outputFile);
   }
 
@@ -138,35 +121,5 @@ public final class LcpAssembler {
     if (!file.exists() || !file.isFile() || !file.canRead()) {
       throw new IllegalArgumentException("File does not exist or is not readable: " + fileName);
     }
-  }
-
-  private static String generateListingLine(Instruction instr, int programCounter) {
-    StringBuilder line = new StringBuilder();
-    line.append(String.format("%1$02X", programCounter)).append("\t\t : ");
-
-    InstructionConfig instructionConfig = CONFIG.getInstructionConfig(instr.getOpcodeStr());
-    if (instructionConfig == null) {
-      line.append("UNKNOWN INSTRUCTION: ").append(instr.getOpcodeStr());
-      return line.toString();
-    }
-
-    int opcode = instr.getOpcode() << (CONFIG.getInstructionFieldsConfig().getOperandFieldLength()
-        + CONFIG.getInstructionFieldsConfig().getAddressingModeFieldLength());
-    String operandStr = instr.getOperandStr();
-
-    if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
-      operandStr = "#" + operandStr;
-      opcode += 1 << CONFIG.getInstructionFieldsConfig().getOperandFieldLength();
-    } else if (instr.getMode() != AddressMode.Mode.DEFAULT) {
-      opcode += instr.getOperand();
-    }
-
-    line.append(String.format("%1$03X", opcode))
-        .append("\t\t\t\t\t\t\t\t\t\t\t\t; ")
-        .append(String.format("%1$-5s", instr.getOpcodeStr()))
-        .append("\t\t\t")
-        .append(operandStr);
-
-    return line.toString();
   }
 }
