@@ -2,11 +2,10 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.soft.processors.assembler.models.AddressMode;
 import com.soft.processors.assembler.models.Instruction;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
