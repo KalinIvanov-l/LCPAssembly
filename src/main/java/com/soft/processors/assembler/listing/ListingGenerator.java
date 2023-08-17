@@ -35,7 +35,6 @@ public class ListingGenerator {
    * This method check instruction and also print listing based on given instruction.
    *
    * @param program The list of instructions in the program.
-   * @param config  The configuration for the assembler.
    * @return The generated listing content as a string.
    */
   public static String generateListing(List<Instruction> program, Configuration config) {
@@ -58,10 +57,10 @@ public class ListingGenerator {
    *
    * @param instr          The instruction for which to generate the listing line.
    * @param programCounter The program counter value for the instruction.
-   * @param config         The configuration for the assembler.
    * @return The generated listing line as a string.
    */
-  private static String generateListingLine(Instruction instr, int programCounter, Configuration config) {
+  private static String generateListingLine(
+          Instruction instr, int programCounter, Configuration config) {
     StringBuilder line = new StringBuilder();
     line.append(String.format("%1$02X", programCounter)).append("\t\t : ");
 
