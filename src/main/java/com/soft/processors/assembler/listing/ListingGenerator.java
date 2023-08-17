@@ -4,10 +4,8 @@ import com.soft.processors.assembler.AddressMode;
 import com.soft.processors.assembler.Instruction;
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
-import java.util.List;
+import java.util.ArrayList;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class generates a listing content for a program's instructions
@@ -18,9 +16,10 @@ import org.slf4j.LoggerFactory;
  * @author kalin
  */
 public class ListingGenerator {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ListingGenerator.class);
   @Getter
   private static final Configuration CONFIG = new Configuration();
+  @Getter
+  private static final ArrayList<Instruction> PROGRAM = new ArrayList<>();
 
   /**
    * Constructor ListingGenerator.
@@ -32,51 +31,33 @@ public class ListingGenerator {
   }
 
   /**
-   * This method check instruction and also print listing based on given instruction.
-   *
-   * @param program The list of instructions in the program.
-   * @return The generated listing content as a string.
-   */
-  public static String generateListing(List<Instruction> program, Configuration config) {
-    StringBuilder listing = new StringBuilder();
-    listing.append("; Address : Machine Code                   ;  Instruction\n\n");
-
-    int counter = 0;
-    for (Instruction instr : program) {
-      String line = generateListingLine(instr, counter++, config);
-      listing.append(line).append("\n");
-    }
-
-    String listingContent = listing.toString();
-    LOGGER.info("{}", listingContent);
-    return listingContent;
-  }
-
-  /**
    * Generates a single line of listing content for the provided instruction and program counter.
    *
-   * @param instr          The instruction for which to generate the listing line.
-   * @param programCounter The program counter value for the instruction.
+   * @param config          The configuration containing instruction and field information.
+   * @param instr           The instruction for which to generate the listing line.
+   * @param programCounter  The program counter value for the instruction.
    * @return The generated listing line as a string.
    */
-  private static String generateListingLine(
-          Instruction instr, int programCounter, Configuration config) {
+  public static String generateListingLine(
+          Configuration config, Instruction instr, int programCounter) {
     StringBuilder line = new StringBuilder();
     line.append(String.format("%1$02X", programCounter)).append("\t\t : ");
 
-    InstructionConfig instructionConfig = CONFIG.getInstructionConfig(instr.getOpcodeStr());
+    InstructionConfig instructionConfig = config.getInstructionConfig(instr.getOpcodeStr());
     if (instructionConfig == null) {
       line.append("UNKNOWN INSTRUCTION: ").append(instr.getOpcodeStr());
       return line.toString();
     }
 
-    int opcode = instr.getOpcode() << (CONFIG.getInstructionFieldsConfig().getOperandFieldLength()
-            + CONFIG.getInstructionFieldsConfig().getAddressingModeFieldLength());
+    int opcode =
+            instr.getOpcode()
+                    << (config.getInstructionFieldsConfig().getOperandFieldLength()
+                    + config.getInstructionFieldsConfig().getAddressingModeFieldLength());
     String operandStr = instr.getOperandStr();
 
     if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
       operandStr = "#" + operandStr;
-      opcode += 1 << CONFIG.getInstructionFieldsConfig().getOperandFieldLength();
+      opcode += 1 << config.getInstructionFieldsConfig().getOperandFieldLength();
     } else if (instr.getMode() != AddressMode.Mode.DEFAULT) {
       opcode += instr.getOperand();
     }

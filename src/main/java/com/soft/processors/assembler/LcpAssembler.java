@@ -74,6 +74,26 @@ public final class LcpAssembler {
     return true;
   }
 
+  /**
+   * This method check instruction and also print listing based on given instruction.
+   *
+   * @return The generated listing content as a string.
+   */
+  public static String generateListing() {
+    StringBuilder listing = new StringBuilder();
+    listing.append("; Address : Machine Code                   ;  Instruction\n\n");
+
+    int counter = 0;
+    for (Instruction instr : PROGRAM) {
+      String line = ListingGenerator.generateListingLine(CONFIG, instr, counter++);
+      listing.append(line).append("\n");
+    }
+
+    String listingContent = listing.toString();
+    LOGGER.info("{}", listingContent);
+    return listingContent;
+  }
+
 
   /**
    * This method read the input file name and parse the source file.
@@ -102,7 +122,7 @@ public final class LcpAssembler {
       return new AssemblyResult("", outputFile);
     }
 
-    String listingContent = ListingGenerator.generateListing(PROGRAM, CONFIG);
+    String listingContent = generateListing();
     return new AssemblyResult(listingContent, outputFile);
   }
 
