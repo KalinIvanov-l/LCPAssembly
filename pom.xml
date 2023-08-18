@@ -23,6 +23,7 @@
         <checkstyle.version>10.12.0</checkstyle.version>
         <mockito.core-version>5.3.1</mockito.core-version>
         <dependency.check.maven-version>8.3.1</dependency.check.maven-version>
+        <manifold.version>2023.1.16</manifold.version>
     </properties>
 
     <dependencyManagement>
@@ -86,6 +87,13 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>${dependency.check.maven-version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>systems.manifold</groupId>
+                <artifactId>manifold-javadoc-agent</artifactId>
+                <version>${manifold.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -170,6 +178,11 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>systems.manifold</groupId>
+            <artifactId>manifold-javadoc-agent</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -219,6 +232,41 @@
                     <execution>
                         <goals>
                             <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- add Manifold's javadoc agent -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <additionalOptions>
+                        <additionalOption>-Xdoclint:none</additionalOption>
+                    </additionalOptions>
+
+                    <!-- Add project's manifold dependencies to javadoc classpath.
+                         Note, Maven does _not_ make these transitives, thus manifold-all is a convenience here, ymmv.
+                         Also note, if your project defines module-info.java files, you _cannot_ use manifold-all, instead you
+                         must provide the explicit dependencies that would otherwise be implied if additionalDependencies
+                         were transitive. -->
+                    <additionalDependencies>
+                        <additionalDependency>
+                            <groupId>systems.manifold</groupId>
+                            <artifactId>manifold-all</artifactId>
+                            <version>${manifold.version}</version>
+                        </additionalDependency>
+                    </additionalDependencies>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
