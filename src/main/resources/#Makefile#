@@ -24,8 +24,3 @@ parser: $(PARSER_GRAMMAR)
 
 clean:
 		del $(BIN)\*.class 
-
-
-
-
-
