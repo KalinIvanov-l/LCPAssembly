@@ -20,7 +20,7 @@ import lombok.Setter;
 public class Instruction {
   private int opcode;
   private int operand;
-  private AddressMode.Mode mode;
+  private Mode mode;
   private String opcodeStr;
   private String operandStr;
 }

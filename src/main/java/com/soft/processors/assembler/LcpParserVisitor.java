@@ -2,8 +2,8 @@ package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
-import com.soft.processors.assembler.models.AddressMode;
 import com.soft.processors.assembler.models.Instruction;
+import com.soft.processors.assembler.models.Mode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -96,7 +96,7 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   public Instruction visitInstrOnly(LcpParser.InstrOnlyContext ctx) {
     String mnemocode = ctx.INSTR().getText().trim();
     InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
-    instr.setMode(AddressMode.Mode.DEFAULT);
+    instr.setMode(Mode.DEFAULT);
     if (instructionConfig != null) {
       instr.setOpcode(instructionConfig.getOpcode());
       instr.setOpcodeStr(instructionConfig.getMnemocode());
@@ -134,7 +134,7 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
     if (LcpParser.pass == 2) {
       String mnemocode = ctx.INSTR().getText().trim();
       InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
-      instr.setMode(AddressMode.Mode.ABSOLUTE);
+      instr.setMode(Mode.ABSOLUTE);
       if (instructionConfig != null) {
         instr.setOpcode(instructionConfig.getOpcode());
         instr.setOpcodeStr(instructionConfig.getMnemocode());
@@ -150,13 +150,13 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
 
   @Override
   public Instruction visitOperExpr(LcpParser.OperExprContext ctx) {
-    instr.setMode(AddressMode.Mode.ABSOLUTE);
+    instr.setMode(Mode.ABSOLUTE);
     return super.visitOperExpr(ctx);
   }
 
   @Override
   public Instruction visitOperImmExpr(LcpParser.OperImmExprContext ctx) {
-    instr.setMode(AddressMode.Mode.IMMEDIATE);
+    instr.setMode(Mode.IMMEDIATE);
     return super.visitOperImmExpr(ctx);
   }
 

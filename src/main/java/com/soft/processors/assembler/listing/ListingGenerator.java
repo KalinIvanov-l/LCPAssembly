@@ -2,8 +2,8 @@ package com.soft.processors.assembler.listing;
 
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
-import com.soft.processors.assembler.models.AddressMode;
 import com.soft.processors.assembler.models.Instruction;
+import com.soft.processors.assembler.models.Mode;
 import java.util.ArrayList;
 import lombok.Getter;
 
@@ -55,10 +55,10 @@ public class ListingGenerator {
                     + config.getInstructionFieldsConfig().getAddressingModeFieldLength());
     String operandStr = instr.getOperandStr();
 
-    if (instr.getMode() == AddressMode.Mode.IMMEDIATE) {
+    if (instr.getMode() == Mode.IMMEDIATE) {
       operandStr = "#" + operandStr;
       opcode += 1 << config.getInstructionFieldsConfig().getOperandFieldLength();
-    } else if (instr.getMode() != AddressMode.Mode.DEFAULT) {
+    } else if (instr.getMode() != Mode.DEFAULT) {
       opcode += instr.getOperand();
     }
 
