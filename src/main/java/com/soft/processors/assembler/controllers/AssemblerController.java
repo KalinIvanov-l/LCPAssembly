@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AssemblerController {
   private static final Logger LOGGER = LoggerFactory.getLogger(AssemblerController.class);
   private static final String TEST_FILE_PATH = "src/main/resources/test.txt";
-  private static final String MESSAGE_ERROR = "error";
 
   /**
    * Assembles the specified file content and returns the assembly result.
@@ -40,18 +38,15 @@ public class AssemblerController {
    * @return assembly result
    */
   @PostMapping("/assemble")
-  public ResponseEntity<Map<String, Object>> assemble(@RequestBody String fileContent) {
+  public ResponseEntity<Map<String, Object>> assemble(@RequestBody String fileContent)
+          throws IOException {
     LOGGER.info("Received file content: {}", fileContent);
-    try {
-      Path tempFile = createTempFileFromContent(fileContent);
-      LOGGER.info("Assembling the file: {}", tempFile);
-      AssemblyResult assemblyResult = LcpAssembler.assemble(tempFile.toString());
-      Files.delete(tempFile);
-      LOGGER.info("Output file generated: {}", assemblyResult.getOutputFile());
-      return createSuccessfulResponse(assemblyResult);
-    } catch (Exception e) {
-      return handleException(e, "Error occurred during assembly: ");
-    }
+    Path tempFile = createTempFileFromContent(fileContent);
+    LOGGER.info("Assembling the file: {}", tempFile);
+    AssemblyResult assemblyResult = LcpAssembler.assemble(tempFile.toString());
+    Files.delete(tempFile);
+    LOGGER.info("Output file generated: {}", assemblyResult.getOutputFile());
+    return createSuccessfulResponse(assemblyResult);
   }
 
   /**
@@ -61,27 +56,21 @@ public class AssemblerController {
    * @return message
    */
   @PostMapping("/saveFile")
-  public ResponseEntity<Map<String, String>> saveFile(@RequestBody String fileData) {
-    try {
-      writeToFile(fileData, new FileOutputStream(TEST_FILE_PATH));
-      return createResponseMessage();
-    } catch (IOException e) {
-      return handleException(e, "Error occurred while saving the file: ");
-    }
+  public ResponseEntity<Map<String, String>> saveFile(@RequestBody String fileData)
+          throws IOException {
+    writeToFile(fileData, new FileOutputStream(TEST_FILE_PATH));
+    return createResponseMessage();
   }
 
   /**
    * Loads file which contains example program and return its context.
    *
    * @return the loaded file
+   * @throws IOException If an I/O error occurs while loading the file.
    */
   @GetMapping("/loadFile")
-  public ResponseEntity<String> loadFile() {
-    try {
-      return ResponseEntity.ok(loadFileContent());
-    } catch (IOException e) {
-      return handleException(e, "Error occurred while loading the file: ");
-    }
+  public ResponseEntity<String> loadFile() throws IOException {
+    return ResponseEntity.ok(loadFileContent());
   }
 
   /**
@@ -106,9 +95,7 @@ public class AssemblerController {
    * @throws IOException If an I/O error occurs while writing to the file.
    */
   public void writeToFile(String data, FileOutputStream fos) throws IOException {
-    try (fos) {
-      fos.write(data.getBytes());
-    }
+    fos.write(data.getBytes());
   }
 
   /**
@@ -126,22 +113,6 @@ public class AssemblerController {
     }
     LOGGER.info("File loaded successfully");
     return Files.readString(path, StandardCharsets.UTF_8);
-  }
-
-  /**
-   * Handles an exception by logging an error, creating an error response,
-   * and generating an appropriate ResponseEntity with an HTTP 500 Internal Server Error status.
-   *
-   * @param e            The exception to be handled.
-   * @param messagePrefix provide exception message in log and error response.
-   * @param <T>          The type of the response body.
-   * @return containing an error response with a status of HTTP 500 Internal Server Error.
-   */
-  private <T> ResponseEntity<T> handleException(Exception e, String messagePrefix) {
-    LOGGER.error("{}{}", messagePrefix, e.getMessage(), e);
-    Map<String, String> errorResponse = new HashMap<>();
-    errorResponse.put(MESSAGE_ERROR, messagePrefix + e.getMessage());
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((T) errorResponse);
   }
 
   /**
