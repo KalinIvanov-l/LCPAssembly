@@ -51,7 +51,7 @@ public class SymbolTable {
    * @param name the name of the symbol to retrieve (String)
    * @return the value of the symbol (Integer)
    */
-  public Integer getSymbolValue(String name) {
+  public int getSymbolValue(String name) {
     if (symbolStore.containsKey(name)) {
       return symbolStore.get(name);
     } else {
