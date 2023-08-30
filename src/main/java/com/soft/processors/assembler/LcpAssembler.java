@@ -105,7 +105,7 @@ public final class LcpAssembler {
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
   public static AssemblyResult assemble(String fileName) throws IOException {
-    checkFileName(fileName);
+    validateFileName(fileName);
     LcpAssembler.inputFile = fileName;
     CONFIG.loadDefaultConfig();
     CONFIG.readConfig();
@@ -134,7 +134,7 @@ public final class LcpAssembler {
    * @param fileName the given string file
    * @throws IllegalArgumentException if provided file is not readable or file is null
    */
-  private static void checkFileName(String fileName) throws IllegalArgumentException {
+  private static void validateFileName(String fileName) throws IllegalArgumentException {
     if (fileName.isEmpty()) {
       throw new IllegalArgumentException("Provided string file is empty ");
     }
