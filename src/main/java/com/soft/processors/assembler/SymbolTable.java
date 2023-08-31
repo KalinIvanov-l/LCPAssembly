@@ -38,7 +38,7 @@ public class SymbolTable {
    */
   public void addSymbol(String name, int value) {
     if (symbolStore.containsKey(name)) {
-      LOGGER.debug(name, "Symbol is already defined ");
+      throw new IllegalArgumentException("Symbol is already defined, cannot have duplication ");
     } else {
       symbolStore.put(name, value);
     }
@@ -55,8 +55,7 @@ public class SymbolTable {
     if (symbolStore.containsKey(name)) {
       return symbolStore.get(name);
     } else {
-      LOGGER.info(name, " Symbol is not defined ");
-      return 0;
+      throw new IllegalArgumentException("Symbol is not defined ");
     }
   }
 
