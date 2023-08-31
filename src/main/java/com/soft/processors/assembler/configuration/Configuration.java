@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -92,21 +91,20 @@ public class Configuration {
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
   private JsonObject readConfigFile() throws IOException {
-    File configFile = new File(configFilePath.toUri());
-    return parseJsonFile(configFile);
+    return parseJsonFile(configFilePath);
   }
 
   /**
    * Provides implementation for read given configuration file.
    *
-   * @param configFile the given file
+   * @param configFilePath the given file
    * @return The JsonObject containing the configuration data.
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
-  private JsonObject parseJsonFile(File configFile) throws IOException {
+  private JsonObject parseJsonFile(Path configFilePath) throws IOException {
     StringBuilder jsonBuilder = new StringBuilder();
 
-    try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath.toFile()))) {
       String line;
       while ((line = reader.readLine()) != null) {
         jsonBuilder.append(line);
