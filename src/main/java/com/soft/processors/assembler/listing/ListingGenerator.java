@@ -41,7 +41,7 @@ public class ListingGenerator {
   public static String generateListingLine(
           Configuration config, Instruction instr, int programCounter) {
     StringBuilder line = new StringBuilder();
-    line.append(String.format("%1$02X", programCounter)).append("\t\t\t\t : ");
+    line.append(String.format("%1$02X", programCounter)).append("\t\t : ");
 
     InstructionConfig instructionConfig = config.getInstructionConfig(instr.getOpcodeStr());
     if (instructionConfig == null) {
@@ -63,9 +63,9 @@ public class ListingGenerator {
     }
 
     line.append(String.format("%1$03X", opcode))
-            .append("\t\t\t\t : ")
+            .append("\t\t\t : ")
             .append(String.format("%1$-5s", instr.getOpcodeStr()))
-            .append("\t\t\t\t")
+            .append("\t\t\t")
             .append(operandStr);
 
     return line.toString();
