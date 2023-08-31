@@ -1,6 +1,5 @@
 package com.soft.processors.assembler;
 
-import com.google.gson.JsonSyntaxException;
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.configuration.InstructionFieldsConfig;
@@ -8,26 +7,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = Configuration.class)
 class ConfigurationTest {
+  Path configFile = Path.of("config.json");
   private Configuration configuration;
 
   @BeforeEach
-  void setUp() {
+  void init() {
     configuration = new Configuration();
   }
 
   @Test
-  void readConfig() throws IOException {
-    configuration.readConfig();
+  void shouldReadGivenConfig() throws IOException {
+    configuration.readConfig(configFile);
 
     InstructionFieldsConfig instructionFieldsConfig =
             configuration.getInstructionFieldsConfig();
@@ -42,7 +41,7 @@ class ConfigurationTest {
   }
 
   @Test
-  void loadDefaultConfig() {
+  void shouldAssertDefaultInstructionConfig() {
     configuration.loadDefaultConfig();
 
     InstructionFieldsConfig instructionFieldsConfig =
@@ -58,25 +57,13 @@ class ConfigurationTest {
   }
 
   @Test
-  void readConfigurationWithInvalidFile() {
-    Configuration.setCfgFILE("invalid_config.json");
-    assertThrows(FileNotFoundException.class, () -> configuration.readConfig());
+  void shouldThrowExceptionWithInvalidConfigurationFile() {
+    Path invalidPath = Path.of("invalid_config.json");
+    assertThrows(FileNotFoundException.class, () -> configuration.readConfig(invalidPath));
   }
 
   @Test
-  void readConfigurationWithInvalidJson() throws IOException {
-    File tempFile = File.createTempFile("temp_config", ".json");
-    FileWriter writer = new FileWriter(tempFile);
-    writer.write("{invalid_json}");
-    writer.close();
-
-    Configuration.setCfgFILE(tempFile.getPath());
-
-    assertThrows(JsonSyntaxException.class, configuration::readConfig);
-  }
-
-  @Test
-  void validateInstructionConfigMap() {
+  void shouldThrowExceptionWhenInstructionIsEmpty() {
     HashMap<String, InstructionConfig> instructionConfigMap = new HashMap<>();
     configuration.setInstructionConfigMap(instructionConfigMap);
 
