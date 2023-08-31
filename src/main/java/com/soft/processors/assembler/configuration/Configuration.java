@@ -5,8 +5,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +30,7 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor
 public class Configuration {
   private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
-  @Setter
-  public static String cfgFILE = "config.json";
+  Path configFilePath = Path.of("config.json");
   private InstructionFieldsConfig instructionFieldsConfig;
   private HashMap<String, InstructionConfig> instructionConfigMap;
 
@@ -46,7 +48,8 @@ public class Configuration {
   /**
    * Read configuration from file [config.json]
    */
-  public void readConfig() throws IOException {
+  public void readConfig(Path path) throws IOException {
+    validateFilePath(path);
     JsonObject configObj = readConfigFile();
     instructionFieldsConfig = readInstructionFieldsConfig(configObj);
     instructionConfigMap = readInstructionConfigMap(configObj);
@@ -71,13 +74,25 @@ public class Configuration {
   }
 
   /**
+   * Validate if the provided path exists.
+   *
+   * @param path the path to be validated
+   * @throws FileNotFoundException if provided file is invalid
+   */
+  private void validateFilePath(Path path) throws FileNotFoundException {
+    if (!Files.exists(path)) {
+      throw new FileNotFoundException("Provided file doesn't exist ");
+    }
+  }
+
+  /**
    * Reads the content of the configuration file and parses it into a JsonObject.
    *
    * @return The JsonObject containing the configuration data.
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
   private JsonObject readConfigFile() throws IOException {
-    File configFile = new File(cfgFILE);
+    File configFile = new File(configFilePath.toUri());
     return parseJsonFile(configFile);
   }
 
