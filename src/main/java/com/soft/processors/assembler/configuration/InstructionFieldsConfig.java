@@ -15,9 +15,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class InstructionFieldsConfig {
-  public Integer opcodeFieldLength;
-  public Integer addressingModeFieldLength;
-  public Integer operandFieldLength;
+  public int opcodeFieldLength;
+  public int addressingModeFieldLength;
+  public int operandFieldLength;
 
   /**
    * Constructor InstructionFieldsConfig.
@@ -26,8 +26,8 @@ public class InstructionFieldsConfig {
    * @param addressingModeFieldLength the length of the addressing mode field
    * @param operandFieldLength        the length of the operand field
    */
-  public InstructionFieldsConfig(Integer opcodeFieldLength,
-                                 Integer addressingModeFieldLength, Integer operandFieldLength) {
+  public InstructionFieldsConfig(int opcodeFieldLength,
+                                 int addressingModeFieldLength, int operandFieldLength) {
 
     this.opcodeFieldLength = opcodeFieldLength;
     this.addressingModeFieldLength = addressingModeFieldLength;

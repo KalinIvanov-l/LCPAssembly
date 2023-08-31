@@ -16,8 +16,8 @@ import lombok.ToString;
 @ToString
 public class InstructionConfig {
   public String mnemocode;
-  public Integer opcode;
-  public Integer addressingModes;
+  public int opcode;
+  public int addressingModes;
 
   /**
    * Constructor InstructionConfig.
@@ -26,7 +26,7 @@ public class InstructionConfig {
    * @param opcode          the opcode for the instruction
    * @param addressingModes the number of addressing modes supported by the instruction
    */
-  public InstructionConfig(String mnemocode, Integer opcode, Integer addressingModes) {
+  public InstructionConfig(String mnemocode, int opcode, int addressingModes) {
     this.mnemocode = mnemocode;
     this.opcode = opcode;
     this.addressingModes = addressingModes;
