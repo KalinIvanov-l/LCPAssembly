@@ -84,7 +84,7 @@ public final class LcpAssembler {
    */
   public static String generateListing() {
     StringBuilder listing = new StringBuilder();
-    listing.append("; Address : Machine Code                   ;  Instruction\n\n");
+    listing.append("\nAddress:      Machine Code:         Instruction:           Labels:\n\n");
 
     int counter = 0;
     for (Instruction instr : PROGRAM) {
