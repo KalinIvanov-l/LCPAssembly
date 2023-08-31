@@ -117,7 +117,7 @@ public final class LcpAssembler {
     }
     outputFile += ".lst";
 
-    if (!parseSourceFile(inputFile)) {
+    if (parseSourceFile(inputFile) == inputFile.isEmpty()) {
       return new AssemblyResult("", inputFile);
     } else if (PROGRAM.isEmpty()) {
       LOGGER.warn("No instructions were generated. Listing cannot be generated.");
