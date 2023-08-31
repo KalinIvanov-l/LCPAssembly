@@ -36,7 +36,7 @@ public class SymbolTable {
    * @param name  the name of the symbol (String)
    * @param value the value of the symbol (Integer)
    */
-  public void addSymbol(String name, Integer value) {
+  public void addSymbol(String name, int value) {
     if (symbolStore.containsKey(name)) {
       LOGGER.debug(name, "Symbol is already defined ");
     } else {
