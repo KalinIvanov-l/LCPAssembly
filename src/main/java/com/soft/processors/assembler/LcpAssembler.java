@@ -4,9 +4,10 @@ import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.listing.ListingGenerator;
 import com.soft.processors.assembler.models.AssemblyResult;
 import com.soft.processors.assembler.models.Instruction;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -104,11 +105,11 @@ public final class LcpAssembler {
    * @return input file
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
-  public static AssemblyResult assemble(String fileName) throws IOException {
+  public static AssemblyResult assemble(Path fileName) throws IOException {
     validateFileName(fileName);
-    LcpAssembler.inputFile = fileName;
+    LcpAssembler.inputFile = String.valueOf(fileName);
     CONFIG.loadDefaultConfig();
-    CONFIG.readConfig();
+    CONFIG.readConfig(Path.of(fileName.toUri()));
 
     String outputFile;
     outputFile = ROM_FILE;
@@ -134,13 +135,8 @@ public final class LcpAssembler {
    * @param fileName the given string file
    * @throws IllegalArgumentException if provided file is not readable or file is null
    */
-  private static void validateFileName(String fileName) throws IllegalArgumentException {
-    if (fileName.isEmpty()) {
-      throw new IllegalArgumentException("Provided string file is empty ");
-    }
-
-    File file = new File(fileName);
-    if (!file.exists() || !file.isFile() || !file.canRead()) {
+  private static void validateFileName(Path fileName) throws IllegalArgumentException {
+    if (!Files.exists(fileName)) {
       throw new IllegalArgumentException("File does not exist or is not readable: " + fileName);
     }
   }

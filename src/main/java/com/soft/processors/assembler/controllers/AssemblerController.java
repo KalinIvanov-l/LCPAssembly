@@ -43,7 +43,7 @@ public class AssemblerController {
     LOGGER.info("Received file content: {}", fileContent);
     Path tempFile = createTempFileFromContent(fileContent);
     LOGGER.info("Assembling the file: {}", tempFile);
-    AssemblyResult assemblyResult = LcpAssembler.assemble(tempFile.toString());
+    AssemblyResult assemblyResult = LcpAssembler.assemble(Path.of(tempFile.toString()));
     Files.delete(tempFile);
     LOGGER.info("Output file generated: {}", assemblyResult.getOutputFile());
     return createSuccessfulResponse(assemblyResult);
