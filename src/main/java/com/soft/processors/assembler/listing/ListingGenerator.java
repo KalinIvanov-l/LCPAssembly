@@ -65,7 +65,7 @@ public class ListingGenerator {
     line.append(String.format("%1$03X", opcode))
             .append("\t\t\t : ")
             .append(String.format("%1$-5s", instr.getOpcodeStr()))
-            .append("\t\t\t")
+            .append("\t : ")
             .append(operandStr);
 
     return line.toString();
