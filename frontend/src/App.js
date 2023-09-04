@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {ChakraProvider, extendTheme, Grid, GridItem} from "@chakra-ui/react";
 
-function App() {
+import MainSection from "./components/MainSection";
+
+const theme = extendTheme({
+  colors: {
+    brand: {
+      100: "#b2f5ea",
+      500: "#00e4d0",
+    },
+  },
+  fonts: {
+    body: "system-ui, sans-serif",
+    heading: "Georgia, serif",
+    mono: "Menlo, monospace",
+  },
+});
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider theme={theme}>
+      <Grid
+        templateRows="repeat(2, 1fr)"
+        templateColumns="repeat(5, 1fr)"
+        gap={4}
+        h="100vh"
+      >
+        <GridItem colSpan={5} bg="gray.700">
+          <MainSection />
+        </GridItem>
+      </Grid>
+    </ChakraProvider>
   );
-}
+};
 
 export default App;
