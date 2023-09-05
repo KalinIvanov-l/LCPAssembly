@@ -15,4 +15,5 @@ COPY . .
 
 EXPOSE 8080
 
+## shell form for execution runtime commands
 CMD ["java", "-jar", "LCPA-0.0.1-SNAPSHOT.jar"]
