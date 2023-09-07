@@ -136,7 +136,7 @@ public final class LcpAssembler {
    * @throws IllegalArgumentException if provided file is not readable or file is null
    */
   private static void validateFileName(Path fileName) throws IllegalArgumentException {
-    if (!Files.exists(fileName)) {
+    if (!Files.exists(fileName) || !Files.isRegularFile(fileName)) {
       throw new IllegalArgumentException("File does not exist or is not readable: " + fileName);
     }
   }
