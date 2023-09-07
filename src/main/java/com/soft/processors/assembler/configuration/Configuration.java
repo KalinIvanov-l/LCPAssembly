@@ -38,8 +38,9 @@ public class Configuration {
    *
    * @param key the mnemonic to look up
    * @return the instruction configuration, or null if the mnemonic is not found
+   * @throws ConfigurationException if provide input is empty
    */
-  public InstructionConfig getInstructionConfig(String key) {
+  public InstructionConfig getInstructionConfig(String key) throws ConfigurationException {
     validateInstructionConfigMap();
     return instructionConfigMap.getOrDefault(key, null);
   }
@@ -65,10 +66,12 @@ public class Configuration {
 
   /**
    * Provides simple check for instruction.
+   *
+   * @throws ConfigurationException if provide input is empty
    */
-  private void validateInstructionConfigMap() {
+  private void validateInstructionConfigMap() throws ConfigurationException {
     if (instructionConfigMap.isEmpty()) {
-      throw new IllegalArgumentException("Instruction configuration map cannot be empty.");
+      throw new ConfigurationException("Instruction configuration map cannot be empty.");
     }
   }
 

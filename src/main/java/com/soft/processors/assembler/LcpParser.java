@@ -1,5 +1,6 @@
 package com.soft.processors.assembler;
 
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import java.util.List;
 import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.Parser;
@@ -403,7 +404,13 @@ public class LcpParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrOnly(this);
+      if (visitor instanceof LcpVisitor) {
+        try {
+          return ((LcpVisitor<? extends T>) visitor).visitInstrOnly(this);
+        } catch (ConfigurationException e) {
+          throw new RuntimeException(e);
+        }
+      }
       else return visitor.visitChildren(this);
     }
   }
@@ -423,7 +430,13 @@ public class LcpParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrOper(this);
+      if (visitor instanceof LcpVisitor) {
+        try {
+          return ((LcpVisitor<? extends T>) visitor).visitInstrOper(this);
+        } catch (ConfigurationException e) {
+          throw new RuntimeException(e);
+        }
+      }
       else return visitor.visitChildren(this);
     }
   }
@@ -443,7 +456,13 @@ public class LcpParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrExpr(this);
+      if (visitor instanceof LcpVisitor) {
+        try {
+          return ((LcpVisitor<? extends T>) visitor).visitInstrExpr(this);
+        } catch (ConfigurationException e) {
+          throw new RuntimeException(e);
+        }
+      }
       else return visitor.visitChildren(this);
     }
   }
@@ -463,7 +482,13 @@ public class LcpParser extends Parser {
 
     @Override
     public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof LcpVisitor) return ((LcpVisitor<? extends T>) visitor).visitInstrLabel(this);
+      if (visitor instanceof LcpVisitor) {
+        try {
+          return ((LcpVisitor<? extends T>) visitor).visitInstrLabel(this);
+        } catch (ConfigurationException e) {
+          throw new RuntimeException(e);
+        }
+      }
       else return visitor.visitChildren(this);
     }
   }

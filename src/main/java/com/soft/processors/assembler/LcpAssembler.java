@@ -1,6 +1,7 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.listing.ListingGenerator;
 import com.soft.processors.assembler.models.AssemblyResult;
 import com.soft.processors.assembler.models.Instruction;
@@ -82,7 +83,7 @@ public final class LcpAssembler {
    *
    * @return The generated listing content as a string.
    */
-  public static String generateListing() {
+  public static String generateListing() throws ConfigurationException {
     StringBuilder listing = new StringBuilder();
     listing.append("\nAddress:      Machine Code:         Instruction:         Labels:\n\n");
 
@@ -97,7 +98,6 @@ public final class LcpAssembler {
     return listingContent;
   }
 
-
   /**
    * This method read the input file name and parse the source file.
    *
@@ -105,7 +105,7 @@ public final class LcpAssembler {
    * @return input file
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
-  public static AssemblyResult assemble(Path fileName) throws IOException {
+  public static AssemblyResult assemble(Path fileName) throws IOException, ConfigurationException {
     validateFileName(fileName);
     LcpAssembler.inputFile = String.valueOf(fileName);
     CONFIG.loadDefaultConfig();

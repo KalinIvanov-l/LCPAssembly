@@ -1,5 +1,6 @@
 package com.soft.processors.assembler;
 
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -7,7 +8,7 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  * This interface defines a complete generic visitor for a parse tree produced
  * by {@link LcpParser}.
  *
- * @param <T> The return type of the visit operation. Use {@link Void} for operations with no return type.
+ * @param <T> The return type of the visit operation.
  */
 public interface LcpVisitor<T> extends ParseTreeVisitor<T> {
   /**
@@ -59,7 +60,7 @@ public interface LcpVisitor<T> extends ParseTreeVisitor<T> {
    * @param ctx the parse tree
    * @return the visitor result
    */
-  T visitInstrOnly(LcpParser.InstrOnlyContext ctx);
+  T visitInstrOnly(LcpParser.InstrOnlyContext ctx) throws ConfigurationException;
 
   /**
    * Visit a parse tree produced by the {@code instrOper}
@@ -68,7 +69,7 @@ public interface LcpVisitor<T> extends ParseTreeVisitor<T> {
    * @param ctx the parse tree
    * @return the visitor result
    */
-  T visitInstrOper(LcpParser.InstrOperContext ctx);
+  T visitInstrOper(LcpParser.InstrOperContext ctx) throws ConfigurationException;
 
   /**
    * Visit a parse tree produced by the {@code instrExpr}
@@ -77,7 +78,7 @@ public interface LcpVisitor<T> extends ParseTreeVisitor<T> {
    * @param ctx the parse tree
    * @return the visitor result
    */
-  T visitInstrExpr(LcpParser.InstrExprContext ctx);
+  T visitInstrExpr(LcpParser.InstrExprContext ctx) throws ConfigurationException;
 
   /**
    * Visit a parse tree produced by the {@code instrLabel}
@@ -86,7 +87,7 @@ public interface LcpVisitor<T> extends ParseTreeVisitor<T> {
    * @param ctx the parse tree
    * @return the visitor result
    */
-  T visitInstrLabel(LcpParser.InstrLabelContext ctx);
+  T visitInstrLabel(LcpParser.InstrLabelContext ctx) throws ConfigurationException;
 
   /**
    * Visit a parse tree produced by the {@code operExpr}

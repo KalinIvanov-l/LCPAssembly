@@ -1,6 +1,7 @@
 package com.soft.processors.assembler.controllers;
 
 import com.soft.processors.assembler.LcpAssembler;
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.models.AssemblyResult;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class AssemblerController {
    */
   @PostMapping("/assemble")
   public ResponseEntity<Map<String, Object>> assemble(@RequestBody String fileContent)
-          throws IOException {
+          throws IOException, ConfigurationException {
     LOGGER.info("Received file content: {}", fileContent);
     Path tempFile = createTempFileFromContent(fileContent);
     LOGGER.info("Assembling the file: {}", tempFile);

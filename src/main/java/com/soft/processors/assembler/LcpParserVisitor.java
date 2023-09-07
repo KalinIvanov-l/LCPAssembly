@@ -1,6 +1,7 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.models.Instruction;
 import com.soft.processors.assembler.models.Mode;
@@ -93,7 +94,7 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   }
 
   @Override
-  public Instruction visitInstrOnly(LcpParser.InstrOnlyContext ctx) {
+  public Instruction visitInstrOnly(LcpParser.InstrOnlyContext ctx) throws ConfigurationException {
     String mnemocode = ctx.INSTR().getText().trim();
     InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
     instr.setMode(Mode.DEFAULT);
@@ -108,16 +109,16 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   }
 
   @Override
-  public Instruction visitInstrOper(LcpParser.InstrOperContext ctx) {
+  public Instruction visitInstrOper(LcpParser.InstrOperContext ctx) throws ConfigurationException {
     return processInstruction(ctx.INSTR().getText().trim());
   }
 
   @Override
-  public Instruction visitInstrExpr(LcpParser.InstrExprContext ctx) {
+  public Instruction visitInstrExpr(LcpParser.InstrExprContext ctx) throws ConfigurationException {
     return processInstruction(ctx.INSTR().getText().trim());
   }
 
-  private Instruction processInstruction(String mnemocode) {
+  private Instruction processInstruction(String mnemocode) throws ConfigurationException {
     InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
     if (instructionConfig != null) {
       instr.setOpcode(instructionConfig.getOpcode());
@@ -130,7 +131,8 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   }
 
   @Override
-  public Instruction visitInstrLabel(LcpParser.InstrLabelContext ctx) {
+  public Instruction visitInstrLabel(LcpParser.InstrLabelContext ctx)
+          throws ConfigurationException {
     if (LcpParser.pass == 2) {
       String mnemocode = ctx.INSTR().getText().trim();
       InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);

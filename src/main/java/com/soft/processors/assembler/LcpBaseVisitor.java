@@ -1,5 +1,6 @@
 package com.soft.processors.assembler;
 
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -8,7 +9,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * which can be extended to create a visitor which only needs to handle a subset
  * of the available methods.
  *
- * @param <T> The return type of the visit operation. Use {@link Void} for operations with no return type.
+ * @param <T> The return type of the visit operation.
  */
 public class LcpBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements LcpVisitor<T> {
   /**
@@ -73,7 +74,7 @@ public class LcpBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements Lc
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
-  public T visitInstrOnly(LcpParser.InstrOnlyContext ctx) {
+  public T visitInstrOnly(LcpParser.InstrOnlyContext ctx) throws ConfigurationException {
     return visitChildren(ctx);
   }
 
@@ -84,7 +85,7 @@ public class LcpBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements Lc
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
-  public T visitInstrOper(LcpParser.InstrOperContext ctx) {
+  public T visitInstrOper(LcpParser.InstrOperContext ctx) throws ConfigurationException {
     return visitChildren(ctx);
   }
 
@@ -95,7 +96,7 @@ public class LcpBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements Lc
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
-  public T visitInstrExpr(LcpParser.InstrExprContext ctx) {
+  public T visitInstrExpr(LcpParser.InstrExprContext ctx) throws ConfigurationException {
     return visitChildren(ctx);
   }
 
@@ -106,7 +107,7 @@ public class LcpBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements Lc
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
-  public T visitInstrLabel(LcpParser.InstrLabelContext ctx) {
+  public T visitInstrLabel(LcpParser.InstrLabelContext ctx) throws ConfigurationException {
     return visitChildren(ctx);
   }
 

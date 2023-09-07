@@ -1,6 +1,7 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
+import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.configuration.InstructionFieldsConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +68,6 @@ class ConfigurationTest {
     HashMap<String, InstructionConfig> instructionConfigMap = new HashMap<>();
     configuration.setInstructionConfigMap(instructionConfigMap);
 
-    assertThrows(IllegalArgumentException.class, () -> configuration.getInstructionConfig(""));
+    assertThrows(ConfigurationException.class, () -> configuration.getInstructionConfig(""));
   }
 }
