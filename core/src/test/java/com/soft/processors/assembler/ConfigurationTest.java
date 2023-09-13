@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ConfigurationTest {
-  Path configFile = Path.of("config.json");
+  Path configFile = Path.of("src/test/resources/config.json");
   private Configuration configuration;
 
   @BeforeEach
