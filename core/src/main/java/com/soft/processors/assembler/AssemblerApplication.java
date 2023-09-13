@@ -15,6 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AssemblerApplication {
   public static void main(String[] args) throws IOException, ConfigurationException {
     SpringApplication.run(AssemblerApplication.class, args);
-    LcpAssembler.assemble(Path.of("src/main/resources/test.txt"));
+    LcpAssembler.assemble(Path.of("core/src/main/resources/test.txt"));
   }
 }
