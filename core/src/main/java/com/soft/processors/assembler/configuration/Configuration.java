@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor
 public class Configuration {
   private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
-  Path configFilePath = Path.of("core/config.json");
+  Path configFilePath = Path.of("config.json");
   private InstructionFieldsConfig instructionFieldsConfig;
   private HashMap<String, InstructionConfig> instructionConfigMap;
 
