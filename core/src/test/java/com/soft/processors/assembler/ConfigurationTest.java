@@ -1,21 +1,20 @@
 package com.soft.processors.assembler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.configuration.InstructionFieldsConfig;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@SpringBootTest(classes = Configuration.class)
 class ConfigurationTest {
   Path configFile = Path.of("config.json");
   private Configuration configuration;
