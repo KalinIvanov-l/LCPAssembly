@@ -16,7 +16,7 @@ import lombok.Getter;
  *
  * @author kalin
  */
-public class ListingGenerator {
+public final class ListingGenerator {
   @Getter
   private static final Configuration CONFIG = new Configuration();
   @Getter
@@ -47,22 +47,11 @@ public class ListingGenerator {
 
     InstructionConfig instructionConfig = config.getInstructionConfig(instr.getOpcodeStr());
     if (instructionConfig == null) {
-      line.append("UNKNOWN INSTRUCTION: ").append(instr.getOpcodeStr());
-      return line.toString();
+      return line.append("UNKNOWN INSTRUCTION: ").append(instr.getOpcodeStr()).toString();
     }
 
-    int opcode =
-            instr.getOpcode()
-                    << (config.getInstructionFieldsConfig().getOperandFieldLength()
-                    + config.getInstructionFieldsConfig().getAddressingModeFieldLength());
-    String operandStr = instr.getOperandStr();
-
-    if (instr.getMode() == Mode.IMMEDIATE) {
-      operandStr = "#" + operandStr;
-      opcode += 1 << config.getInstructionFieldsConfig().getOperandFieldLength();
-    } else if (instr.getMode() != Mode.DEFAULT) {
-      opcode += instr.getOperand();
-    }
+    int opcode = calculateOpcode(instr, config);
+    String operandStr = formatOperand(instr);
 
     line.append(String.format("%1$03X", opcode))
             .append("\t\t\t : ")
@@ -71,5 +60,40 @@ public class ListingGenerator {
             .append(operandStr);
 
     return line.toString();
+  }
+
+  /**
+   * Calculates the opcode value for the given instruction based on its configuration.
+   *
+   * @param instr  The instruction for which to calculate the opcode.
+   * @param config The configuration containing the instruction field lengths.
+   * @return The calculated opcode value.
+   */
+  private static int calculateOpcode(Instruction instr, Configuration config) {
+    int opcode = instr.getOpcode()
+            << (config.getInstructionFieldsConfig().getOperandFieldLength()
+            + config.getInstructionFieldsConfig().getAddressingModeFieldLength());
+
+    opcode += (instr.getMode() == Mode.IMMEDIATE)
+            ? (1 << config.getInstructionFieldsConfig().getOperandFieldLength()) : 0;
+    opcode += (instr.getMode() != Mode.DEFAULT) ? instr.getOperand() : 0;
+
+    return opcode;
+  }
+
+  /**
+   * Formats the operand string for the given instruction, adding a '#' symbol
+   * if the instruction's mode is IMMEDIATE.
+   *
+   * @param instr The instruction for which to format the operand.
+   * @return The formatted operand string.
+   */
+  private static String formatOperand(Instruction instr) {
+    String operandStr = instr.getOperandStr();
+
+    if (instr.getMode() == Mode.IMMEDIATE) {
+      operandStr = "#" + operandStr;
+    }
+    return operandStr;
   }
 }
