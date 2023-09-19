@@ -9,7 +9,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +32,7 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor
 public class Configuration {
   private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
-  Path configFilePath = Path.of("config.json");
+  Path configFilePath = Path.of("core/config.json");
   private InstructionFieldsConfig instructionFieldsConfig;
   private HashMap<String, InstructionConfig> instructionConfigMap;
 
@@ -145,18 +148,21 @@ public class Configuration {
    *         as keys and the corresponding configuration data as values.
    */
   private HashMap<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
-    HashMap<String, InstructionConfig> configHashMap = new HashMap<>();
     JsonArray instructionArray = configObj.getAsJsonArray("instructionConfig");
 
-    for (int i = 0; i < instructionArray.size(); i++) {
-      JsonObject instructionObj = instructionArray.get(i).getAsJsonObject();
-      String mnemocode = instructionObj.getAsJsonPrimitive("mnemocode").getAsString();
-      int opcode = instructionObj.getAsJsonPrimitive("opcode").getAsInt();
-      int addressingModes = instructionObj.getAsJsonPrimitive("addressingModes").getAsInt();
-      InstructionConfig instructionConfig = new InstructionConfig(
-              mnemocode, opcode, addressingModes);
-      configHashMap.put(mnemocode, instructionConfig);
-    }
-    return configHashMap;
+    List<JsonObject> instructionList = new ArrayList<>();
+    instructionArray.forEach(element -> instructionList.add(element.getAsJsonObject()));
+
+    return instructionList.stream()
+            .collect(Collectors.toMap(
+                    obj -> obj.getAsJsonPrimitive("mnemocode").getAsString(),
+                    obj -> new InstructionConfig(
+                            obj.getAsJsonPrimitive("mnemocode").getAsString(),
+                            obj.getAsJsonPrimitive("opcode").getAsInt(),
+                            obj.getAsJsonPrimitive("addressingModes").getAsInt()
+                    ),
+                    (existing, replacement) -> replacement,
+                    HashMap::new
+            ));
   }
 }
