@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -38,6 +40,7 @@ public final class LcpAssembler {
   private static final ArrayList<Instruction> PROGRAM = new ArrayList<>();
   @Getter
   private static final Configuration CONFIG = new Configuration();
+  private static final String DELIMITER = "\n";
   private static String inputFile = "";
 
   /**
@@ -83,19 +86,22 @@ public final class LcpAssembler {
    *
    * @return The generated listing content as a string.
    */
-  public static String generateListing() throws ConfigurationException {
-    StringBuilder listing = new StringBuilder();
-    listing.append("\nAddress:      Machine Code:         Instruction:         Labels:\n\n");
+  public static String generateListing() {
+    String header = "\nAddress:      Machine Code:         Instruction:         Labels:\n\n";
 
-    int counter = 0;
-    for (Instruction instr : PROGRAM) {
-      String line = ListingGenerator.generateListingLine(CONFIG, instr, counter++);
-      listing.append(line).append("\n");
-    }
+    String listingContent = IntStream.range(0, PROGRAM.size())
+            .mapToObj(counter -> {
+              try {
+                return ListingGenerator.generateListingLine(CONFIG, PROGRAM.get(counter), counter);
+              } catch (ConfigurationException e) {
+                throw new RuntimeException(e);
+              }
+            })
+            .collect(Collectors.joining(DELIMITER));
 
-    String listingContent = listing.toString();
-    LOGGER.info("{}", listingContent);
-    return listingContent;
+    String listing = header + listingContent;
+    LOGGER.info("{}", listing);
+    return listing;
   }
 
   /**
@@ -105,7 +111,7 @@ public final class LcpAssembler {
    * @return input file
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
-  public static AssemblyResult assemble(Path fileName) throws IOException, ConfigurationException {
+  public static AssemblyResult assemble(Path fileName) throws IOException {
     validateFileName(fileName);
     LcpAssembler.inputFile = String.valueOf(fileName);
     CONFIG.loadDefaultConfig();
