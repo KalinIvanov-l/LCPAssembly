@@ -3,9 +3,7 @@ package com.soft.processors.assembler.configuration;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -108,16 +106,7 @@ public class Configuration {
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
   private JsonObject parseJsonFile(Path configFilePath) throws IOException {
-    StringBuilder jsonBuilder = new StringBuilder();
-
-    try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath.toFile()))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        jsonBuilder.append(line);
-      }
-    }
-
-    String json = jsonBuilder.toString();
+    String json = String.join("\n", Files.readAllLines(configFilePath));
     return JsonParser.parseString(json).getAsJsonObject();
   }
 
