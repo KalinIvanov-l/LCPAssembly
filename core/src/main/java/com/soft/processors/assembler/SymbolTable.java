@@ -39,8 +39,7 @@ public class SymbolTable {
    * @param value the value of the symbol (Integer)
    */
   public void addSymbol(String name, int value) {
-    checkIfAlreadyExist(name);
-    symbolStore.put(name, value);
+    checkIfAlreadyExist(name, value);
   }
 
   /**
@@ -74,9 +73,11 @@ public class SymbolTable {
    *
    * @param name the name of the symbol
    */
-  private void checkIfAlreadyExist(String name) {
+  private void checkIfAlreadyExist(String name, int value) {
     if (symbolStore.containsKey(name)) {
       throw new IllegalArgumentException("Symbol is already defined, cannot have duplication ");
+    } else {
+      symbolStore.put(name, value);
     }
   }
 }
