@@ -8,10 +8,11 @@ import com.soft.processors.assembler.configuration.Configuration;
 import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.configuration.InstructionFieldsConfig;
+
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.HashMap;
 
-import com.soft.processors.assembler.exceptions.InvalidFileException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +43,7 @@ class ConfigurationTest {
   @Test
   void shouldThrowExceptionWithInvalidConfigurationFile() {
     Path invalidPath = Path.of("invalid_config.json");
-    assertThrows(InvalidFileException.class, () -> configuration.readConfig(invalidPath));
+    assertThrows(FileNotFoundException.class, () -> configuration.readConfig(invalidPath));
   }
 
   @Test
