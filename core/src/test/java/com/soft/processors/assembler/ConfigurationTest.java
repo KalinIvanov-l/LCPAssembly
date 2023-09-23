@@ -5,40 +5,23 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.configuration.ConfigurationException;
+import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.configuration.InstructionFieldsConfig;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+
+import com.soft.processors.assembler.exceptions.InvalidFileException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ConfigurationTest {
-  Path configFile = Path.of("core/config.json");
   private Configuration configuration;
 
   @BeforeEach
   void init() {
     configuration = new Configuration();
   }
-
-//  @Test
-//  void shouldReadGivenConfig() throws IOException {
-//    configuration.readConfig(configFile);
-//
-//    InstructionFieldsConfig instructionFieldsConfig =
-//            configuration.getInstructionFieldsConfig();
-//    assertEquals(3, instructionFieldsConfig.opcodeFieldLength);
-//    assertEquals(1, instructionFieldsConfig.addressingModeFieldLength);
-//    assertEquals(8, instructionFieldsConfig.operandFieldLength);
-//
-//    HashMap<String, InstructionConfig> instructionConfigMap =
-//            configuration.getInstructionConfigMap();
-//    assertNotNull(instructionConfigMap);
-//    assertEquals(7, instructionConfigMap.size());
-//  }
 
   @Test
   void shouldAssertDefaultInstructionConfig() {
@@ -59,7 +42,7 @@ class ConfigurationTest {
   @Test
   void shouldThrowExceptionWithInvalidConfigurationFile() {
     Path invalidPath = Path.of("invalid_config.json");
-    assertThrows(FileNotFoundException.class, () -> configuration.readConfig(invalidPath));
+    assertThrows(InvalidFileException.class, () -> configuration.readConfig(invalidPath));
   }
 
   @Test
