@@ -1,24 +1,23 @@
 package com.soft.processors.assembler.controllers;
 
 import com.soft.processors.assembler.LcpAssembler;
-import com.soft.processors.assembler.configuration.ConfigurationException;
+import com.soft.processors.assembler.exceptions.InvalidFileException;
 import com.soft.processors.assembler.models.AssemblyResult;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * AssemblerController is a Spring Boot REST controller responsible for handling requests related to
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/assembler")
 public class AssemblerController {
   private static final Logger LOGGER = LoggerFactory.getLogger(AssemblerController.class);
-  private static final String TEST_FILE_PATH = "src/main/resources/test.txt";
 
   /**
    * Assembles the specified file content and returns the assembly result.
@@ -40,7 +38,7 @@ public class AssemblerController {
    */
   @PostMapping("/assemble")
   public ResponseEntity<Map<String, Object>> assemble(@RequestBody String fileContent)
-          throws IOException, ConfigurationException {
+          throws IOException {
     LOGGER.info("Received file content: {}", fileContent);
     Path tempFile = createTempFileFromContent(fileContent);
     LOGGER.info("Assembling the file: {}", tempFile);
@@ -51,27 +49,19 @@ public class AssemblerController {
   }
 
   /**
-   * Save the specified file.
-   *
-   * @param fileData the data of the file to save.
-   * @return message
-   */
-  @PostMapping("/saveFile")
-  public ResponseEntity<Map<String, String>> saveFile(@RequestBody String fileData)
-          throws IOException {
-    writeToFile(fileData, new FileOutputStream(TEST_FILE_PATH));
-    return createResponseMessage();
-  }
-
-  /**
    * Loads file which contains example program and return its context.
    *
-   * @return the loaded file
-   * @throws IOException If an I/O error occurs while loading the file.
+   * @param file The uploaded file.
+   * @return the loaded file content
+   * @throws IOException          If an I/O error occurs while loading the file.
+   * @throws InvalidFileException if the file is empty
    */
-  @GetMapping("/loadFile")
-  public ResponseEntity<String> loadFile() throws IOException {
-    return ResponseEntity.ok(loadFileContent());
+  @PostMapping("/loadFile") // Change the annotation to @PostMapping
+  public ResponseEntity<String> loadFile(@RequestParam("file") MultipartFile file)
+          throws IOException, InvalidFileException {
+    checkNotEmpty(file);
+    String fileContent = new String(file.getBytes(), StandardCharsets.UTF_8);
+    return ResponseEntity.ok(fileContent);
   }
 
   /**
@@ -88,32 +78,16 @@ public class AssemblerController {
   }
 
   /**
-   * Writes the provided data to a FileOutputStream, ensuring proper resource management.
+   * Check if the provided file is empty.
    *
-   * @param data The data to be written to the file.
-   * @param fos The FileOutputStream to write the data to.
-   *          It will be automatically closed(try with resources) after writing.
-   * @throws IOException If an I/O error occurs while writing to the file.
+   * @param file the loaded file content
+   * @throws InvalidFileException if the file is empty
    */
-  public void writeToFile(String data, FileOutputStream fos) throws IOException {
-    fos.write(data.getBytes());
-  }
-
-  /**
-   * Loads the content of a given file, creating the file if it does not exist.
-   *
-   * @return The content of the file as a string.
-   * @throws IOException If an I/O error occurs while loading or creating the file.
-   */
-  public String loadFileContent() throws IOException {
-    Path path = Paths.get(TEST_FILE_PATH);
-    LOGGER.info("Attempting to load file from a path: {}", path);
-    if (!Files.exists(path)) {
-      LOGGER.info("File does not exist, creating a new file at a path: {}", path);
-      Files.createFile(path);
+  private void checkNotEmpty(MultipartFile file) throws InvalidFileException {
+    if (file.isEmpty()) {
+      throw new InvalidFileException("The Provided file is empty. Not file uploaded ");
     }
-    LOGGER.info("File loaded successfully");
-    return Files.readString(path, StandardCharsets.UTF_8);
+
   }
 
   /**
@@ -123,22 +97,11 @@ public class AssemblerController {
    * @return A ResponseEntity with a success status and a map containing assembled data.
    */
   private ResponseEntity<Map<String, Object>> createSuccessfulResponse(
-      AssemblyResult assemblyResult) {
+          AssemblyResult assemblyResult) {
     Map<String, Object> response = new HashMap<>();
     response.put("listing", assemblyResult.getListing());
     response.put("consoleOutput", assemblyResult.getOutputFile());
     response.put("logs", assemblyResult.getLogs());
-    return ResponseEntity.ok(response);
-  }
-
-  /**
-   * Creates a ResponseEntity containing a response message indicating a successful operation.
-   *
-   * @return A ResponseEntity with a success status and a map containing a success message.
-   */
-  private ResponseEntity<Map<String, String>> createResponseMessage() {
-    Map<String, String> response = new HashMap<>();
-    response.put("message", "File saved successfully.");
     return ResponseEntity.ok(response);
   }
 }
