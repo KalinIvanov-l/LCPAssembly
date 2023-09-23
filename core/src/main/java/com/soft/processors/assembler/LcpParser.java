@@ -1,6 +1,6 @@
 package com.soft.processors.assembler;
 
-import com.soft.processors.assembler.configuration.ConfigurationException;
+import com.soft.processors.assembler.exceptions.ConfigurationException;
 import java.util.List;
 import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.Parser;

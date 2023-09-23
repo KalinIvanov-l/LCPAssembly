@@ -1,7 +1,7 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.configuration.ConfigurationException;
+import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.listing.ListingGenerator;
 import com.soft.processors.assembler.models.AssemblyResult;
 import com.soft.processors.assembler.models.Instruction;

@@ -1,8 +1,8 @@
 package com.soft.processors.assembler.listing;
 
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.configuration.ConfigurationException;
 import com.soft.processors.assembler.configuration.InstructionConfig;
+import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.models.Instruction;
 import com.soft.processors.assembler.models.Mode;
 import java.util.ArrayList;
