@@ -1,4 +1,4 @@
-package com.soft.processors.assembler.configuration;
+package com.soft.processors.assembler.exceptions;
 
 /**
  * The ConfigurationException defines an Exception throws when a configuration file is wrong.
