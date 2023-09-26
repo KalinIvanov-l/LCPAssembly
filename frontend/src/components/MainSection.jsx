@@ -50,9 +50,10 @@ const MainSection = () => {
         <Box flex={4} bg="black" color="white" p={4} justifyContent="flex-end">
           <Flex p={1}>
             <Select
-              placeholder="Select option"
-              onChange={(event) => handleActionSelect(event)}
-              value={selectedOption}
+                onMouseLeave={(e) => e.target.size = 1}
+                onChange={(event) => handleActionSelect(event)}
+                value={selectedOption}
+                cursor="pointer"
             >
               <option value="load">Load</option>
               <option value="assemble">Assemble</option>
