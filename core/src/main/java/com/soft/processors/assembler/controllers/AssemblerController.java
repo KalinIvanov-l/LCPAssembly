@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.AbstractMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -98,10 +100,13 @@ public class AssemblerController {
    */
   private ResponseEntity<Map<String, Object>> createSuccessfulResponse(
           AssemblyResult assemblyResult) {
-    Map<String, Object> response = new HashMap<>();
-    response.put("listing", assemblyResult.getListing());
-    response.put("consoleOutput", assemblyResult.getOutputFile());
-    response.put("logs", assemblyResult.getLogs());
+
+    Map<String, Object> response = Stream.of(
+                    new AbstractMap.SimpleEntry<>("listing", assemblyResult.getListing()),
+                    new AbstractMap.SimpleEntry<>("consoleOutput", assemblyResult.getOutputFile()),
+                    new AbstractMap.SimpleEntry<>("logs", assemblyResult.getLogs())
+            )
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     return ResponseEntity.ok(response);
   }
 }
