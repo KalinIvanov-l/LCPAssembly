@@ -12,6 +12,7 @@ import com.soft.processors.assembler.configuration.InstructionFieldsConfig;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class ConfigurationTest {
     assertEquals(1, instructionFieldsConfig.addressingModeFieldLength);
     assertEquals(8, instructionFieldsConfig.operandFieldLength);
 
-    HashMap<String, InstructionConfig> instructionConfigMap =
+    Map<String, InstructionConfig> instructionConfigMap =
             configuration.getInstructionConfigMap();
     assertNotNull(instructionConfigMap);
     assertEquals(0, instructionConfigMap.size());
@@ -48,7 +49,7 @@ class ConfigurationTest {
 
   @Test
   void shouldThrowExceptionWhenInstructionIsEmpty() {
-    HashMap<String, InstructionConfig> instructionConfigMap = new HashMap<>();
+    Map<String, InstructionConfig> instructionConfigMap = new HashMap<>();
     configuration.setInstructionConfigMap(instructionConfigMap);
 
     assertThrows(ConfigurationException.class, () -> configuration.getInstructionConfig(""));

@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class Configuration {
   private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
   Path configFilePath = Path.of("core/config.json");
   private InstructionFieldsConfig instructionFieldsConfig;
-  private HashMap<String, InstructionConfig> instructionConfigMap;
+  private Map<String, InstructionConfig> instructionConfigMap;
 
   /**
    * Returns the instruction configuration for the specified mnemonic.
@@ -137,7 +138,7 @@ public class Configuration {
    * @return A HashMap containing InstructionConfig objects with mnemonic
    *         as keys and the corresponding configuration data as values.
    */
-  private HashMap<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
+  private Map<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
     JsonArray instructionArray = configObj.getAsJsonArray("instructionConfig");
 
     List<JsonObject> instructionList = new ArrayList<>();
