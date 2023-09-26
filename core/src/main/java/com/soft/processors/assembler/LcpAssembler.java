@@ -1,7 +1,6 @@
 package com.soft.processors.assembler;
 
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.listing.ListingGenerator;
 import com.soft.processors.assembler.models.AssemblyResult;
 import com.soft.processors.assembler.models.Instruction;
@@ -90,13 +89,8 @@ public final class LcpAssembler {
     String header = "\nAddress:      Machine Code:         Instruction:         Labels:\n\n";
 
     String listingContent = IntStream.range(0, PROGRAM.size())
-            .mapToObj(counter -> {
-              try {
-                return ListingGenerator.generateListingLine(CONFIG, PROGRAM.get(counter), counter);
-              } catch (ConfigurationException e) {
-                throw new RuntimeException(e);
-              }
-            })
+            .mapToObj(counter ->
+                    ListingGenerator.generateListingLine(CONFIG, PROGRAM.get(counter), counter))
             .collect(Collectors.joining(DELIMITER));
 
     String listing = header + listingContent;
