@@ -1,11 +1,12 @@
 package com.soft.processors.assembler.listing;
 
 import com.soft.processors.assembler.configuration.Configuration;
-import com.soft.processors.assembler.configuration.InstructionConfig;
-import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.models.Instruction;
 import com.soft.processors.assembler.models.Mode;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.Getter;
 
 /**
@@ -20,7 +21,7 @@ public final class ListingGenerator {
   @Getter
   private static final Configuration CONFIG = new Configuration();
   @Getter
-  private static final ArrayList<Instruction> PROGRAM = new ArrayList<>();
+  private static final List<Instruction> PROGRAM = new ArrayList<>();
 
   /**
    * Constructor ListingGenerator.
@@ -40,26 +41,21 @@ public final class ListingGenerator {
    * @return The generated listing line as a string.
    */
   public static String generateListingLine(
-          Configuration config, Instruction instr, int programCounter)
-          throws ConfigurationException {
-    StringBuilder line = new StringBuilder();
-    line.append(String.format("%1$02X", programCounter)).append("\t\t : ");
+          Configuration config, Instruction instr, int programCounter) {
+    return IntStream.rangeClosed(1, 4)
+            .mapToObj(partNumber -> generatePart(config, instr, programCounter, partNumber))
+            .collect(Collectors.joining(" : ", "", ""));
+  }
 
-    InstructionConfig instructionConfig = config.getInstructionConfig(instr.getOpcodeStr());
-    if (instructionConfig == null) {
-      return line.append("UNKNOWN INSTRUCTION: ").append(instr.getOpcodeStr()).toString();
-    }
-
-    int opcode = calculateOpcode(instr, config);
-    String operandStr = formatOperand(instr);
-
-    line.append(String.format("%1$03X", opcode))
-            .append("\t\t\t : ")
-            .append(String.format("%1$-5s", instr.getOpcodeStr()))
-            .append("\t : ")
-            .append(operandStr);
-
-    return line.toString();
+  private static String generatePart(
+          Configuration config, Instruction instr, int programCounter, int partNumber) {
+    return switch (partNumber) {
+      case 1 -> String.format("%1$02X\t\t", programCounter);
+      case 2 -> String.format("%1$03X\t\t\t", calculateOpcode(instr, config));
+      case 3 -> String.format("%1$-5s\t\t", instr.getOpcodeStr());
+      case 4 -> formatOperand(instr);
+      default -> "";
+    };
   }
 
   /**
@@ -89,11 +85,6 @@ public final class ListingGenerator {
    * @return The formatted operand string.
    */
   private static String formatOperand(Instruction instr) {
-    String operandStr = instr.getOperandStr();
-
-    if (instr.getMode() == Mode.IMMEDIATE) {
-      operandStr = "#" + operandStr;
-    }
-    return operandStr;
+    return instr.getMode() == Mode.IMMEDIATE ? "#" + instr.getOperandStr() : instr.getOperandStr();
   }
 }
