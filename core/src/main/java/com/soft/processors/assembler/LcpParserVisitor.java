@@ -5,7 +5,6 @@ import com.soft.processors.assembler.configuration.InstructionConfig;
 import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.models.Instruction;
 import com.soft.processors.assembler.models.Mode;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +16,9 @@ import lombok.Setter;
 @Setter
 public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   private final SymbolTable symbolTable;
-  private final ArrayList<Instruction> program;
-  private Instruction instr = new Instruction();
+  private final List<Instruction> program;
   private final Configuration config;
+  private Instruction instr = new Instruction();
   private int programCounter = 0;
 
   /**
@@ -33,7 +32,7 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
           SymbolTable symbolTable, List<Instruction> program, Configuration config) {
 
     this.symbolTable = symbolTable;
-    this.program = (ArrayList<Instruction>) program;
+    this.program = program;
     this.config = config;
   }
 
@@ -46,37 +45,24 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
 
   @Override
   public Instruction visitDirective(LcpParser.DirectiveContext ctx) {
-    String ident;
-    String constant;
-
-    if (LcpParser.pass == 1 && (ctx.IDENT() != null)) {
-      ident = ctx.IDENT().getText().trim();
-      int value;
-      if (ctx.CONST() != null) {
-        constant = ctx.CONST().getText().trim().toUpperCase();
-        if (constant.endsWith("H")) {
-          value = Integer.parseInt(constant.substring(0, constant.length() - 1), 16);
-        } else {
-          value = Integer.parseInt(constant);
-        }
-        symbolTable.addSymbol(ident, value);
-      }
-
+    if (LcpParser.pass == 1 && ctx.IDENT() != null && ctx.CONST() != null) {
+      var ident = ctx.IDENT().getText().trim();
+      var constant = ctx.CONST().getText().trim().toUpperCase();
+      var value = constant.endsWith("H")
+              ? Integer.parseInt(constant.substring(0, constant.length() - 1), 16)
+              : Integer.parseInt(constant);
+      symbolTable.addSymbol(ident, value);
     }
     return null;
   }
 
   @Override
   public Instruction visitLabeledInstr(LcpParser.LabeledInstrContext ctx) {
-    String label;
-
-    if (LcpParser.pass == 1) {
-      if (ctx.LABEL() != null) {
-        label = ctx.LABEL().getText().trim();
-      } else {
-        return null;
+    if (LcpParser.pass == 1 && ctx.LABEL() != null) {
+      var label = ctx.LABEL().getText().trim();
+      if (!label.isEmpty()) {
+        symbolTable.addSymbol(label, programCounter);
       }
-      symbolTable.addSymbol(label, programCounter);
     }
     return super.visitLabeledInstr(ctx);
   }
@@ -95,16 +81,11 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
 
   @Override
   public Instruction visitInstrOnly(LcpParser.InstrOnlyContext ctx) throws ConfigurationException {
-    String mnemocode = ctx.INSTR().getText().trim();
+    var mnemocode = ctx.INSTR().getText().trim();
     InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
     instr.setMode(Mode.DEFAULT);
-    if (instructionConfig != null) {
-      instr.setOpcode(instructionConfig.getOpcode());
-      instr.setOpcodeStr(instructionConfig.getMnemocode());
-    } else {
-      instr.setOpcode(0);
-      instr.setOpcodeStr(mnemocode);
-    }
+    instr.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
+    instr.setOpcodeStr(instructionConfig != null ? instructionConfig.getMnemocode() : mnemocode);
     return super.visitInstrOnly(ctx);
   }
 
@@ -120,13 +101,8 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
 
   private Instruction processInstruction(String mnemocode) throws ConfigurationException {
     InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
-    if (instructionConfig != null) {
-      instr.setOpcode(instructionConfig.getOpcode());
-      instr.setOpcodeStr(instructionConfig.getMnemocode());
-    } else {
-      instr.setOpcode(0);
-      instr.setOpcodeStr(mnemocode);
-    }
+    instr.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
+    instr.setOpcodeStr(instructionConfig != null ? instructionConfig.getMnemocode() : mnemocode);
     return instr;
   }
 
@@ -136,16 +112,14 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
     if (LcpParser.pass == 2) {
       String mnemocode = ctx.INSTR().getText().trim();
       InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
+
       instr.setMode(Mode.ABSOLUTE);
-      if (instructionConfig != null) {
-        instr.setOpcode(instructionConfig.getOpcode());
-        instr.setOpcodeStr(instructionConfig.getMnemocode());
-        instr.setOperand(symbolTable.getSymbolValue(ctx.LABEL().getText().trim()));
-        instr.setOperandStr(ctx.LABEL().getText().trim());
-      } else {
-        instr.setOpcode(0);
-        instr.setOpcodeStr(mnemocode);
-      }
+      instr.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
+      instr.setOpcodeStr(instructionConfig != null ? instructionConfig.getMnemocode() : mnemocode);
+
+      var label = ctx.LABEL().getText().trim();
+      instr.setOperand(symbolTable.getSymbolValue(label));
+      instr.setOperandStr(label);
     }
     return super.visitInstrLabel(ctx);
   }
@@ -165,21 +139,20 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   @Override
   public Instruction visitExprIdent(LcpParser.ExprIdentContext ctx) {
     if (LcpParser.pass == 2) {
-      instr.setOperand(symbolTable.getSymbolValue(ctx.IDENT().getText().trim()));
-      instr.setOperandStr(ctx.IDENT().getText().trim());
+      var ident = ctx.IDENT().getText().trim();
+      instr.setOperand(symbolTable.getSymbolValue(ident));
+      instr.setOperandStr(ident);
     }
     return super.visitExprIdent(ctx);
   }
 
   @Override
   public Instruction visitExprConstant(LcpParser.ExprConstantContext ctx) {
-    String constant = ctx.CONST().getText().trim().toUpperCase();
-    int value;
-    if (constant.endsWith("H")) {
-      value = Integer.parseInt(constant.substring(0, constant.length() - 1), 16);
-    } else {
-      value = Integer.parseInt(constant);
-    }
+    var constant = ctx.CONST().getText().trim().toUpperCase();
+    var value = constant.endsWith("H")
+            ? Integer.parseInt(constant.substring(0, constant.length() - 1), 16) :
+              Integer.parseInt(constant);
+
     instr.setOperand(value);
     instr.setOperandStr(String.format("%1$02Xh", value));
     return super.visitExprConstant(ctx);
