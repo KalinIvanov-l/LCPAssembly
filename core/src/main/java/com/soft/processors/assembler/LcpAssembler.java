@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public final class LcpAssembler {
   @Getter
   private static final SymbolTable SYMBOL_TABLE = new SymbolTable();
   @Getter
-  private static final ArrayList<Instruction> PROGRAM = new ArrayList<>();
+  private static final List<Instruction> PROGRAM = new ArrayList<>();
   @Getter
   private static final Configuration CONFIG = new Configuration();
   private static final String DELIMITER = "\n";
@@ -111,16 +112,11 @@ public final class LcpAssembler {
     CONFIG.loadDefaultConfig();
     CONFIG.readConfig(Path.of(fileName.toUri()));
 
-    String outputFile;
-    outputFile = ROM_FILE;
-    if (inputFile.contains(".")) {
-      outputFile = inputFile.substring(0, inputFile.lastIndexOf('.'));
-    }
-    outputFile += ".lst";
+    String outputFile = inputFile.contains(".")
+            ? inputFile.substring(0, inputFile.lastIndexOf('.')) + ".lst"
+            : ROM_FILE;
 
     if (parseSourceFile(inputFile) == inputFile.isEmpty()) {
-      return new AssemblyResult("", inputFile);
-    } else if (PROGRAM.isEmpty()) {
       LOGGER.warn("No instructions were generated. Listing cannot be generated.");
       return new AssemblyResult("", outputFile);
     }
