@@ -6,6 +6,7 @@ import com.soft.processors.assembler.exceptions.ConfigurationException;
 import com.soft.processors.assembler.models.Instruction;
 import com.soft.processors.assembler.models.Mode;
 import java.util.List;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,7 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   private final SymbolTable symbolTable;
   private final List<Instruction> program;
   private final Configuration config;
-  private Instruction instr = new Instruction();
+  private Instruction instruction = new Instruction();
   private int programCounter = 0;
 
   /**
@@ -45,14 +46,19 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
 
   @Override
   public Instruction visitDirective(LcpParser.DirectiveContext ctx) {
-    if (LcpParser.pass == 1 && ctx.IDENT() != null && ctx.CONST() != null) {
-      var ident = ctx.IDENT().getText().trim();
-      var constant = ctx.CONST().getText().trim().toUpperCase();
-      var value = constant.endsWith("H")
-              ? Integer.parseInt(constant.substring(0, constant.length() - 1), 16)
-              : Integer.parseInt(constant);
-      symbolTable.addSymbol(ident, value);
-    }
+    Optional.ofNullable(ctx)
+            .filter(c -> LcpParser.pass != 1)
+            .filter(c -> c.IDENT() != null && c.CONST() != null)
+            .ifPresent(c -> {
+              var ident = c.IDENT().getText().trim();
+              int value;
+              try {
+                value = parseConstant(c.CONST().getText().trim());
+              } catch (ConfigurationException e) {
+                throw new RuntimeException(e);
+              }
+              symbolTable.addSymbol(ident, value);
+            });
     return null;
   }
 
@@ -70,69 +76,66 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   @Override
   public Instruction visitInstr(LcpParser.InstrContext ctx) {
     visitChildren(ctx);
-    program.add(new Instruction(instr.getOpcode(),
-            instr.getOperand(),
-            instr.getMode(),
-            instr.getOpcodeStr(),
-            instr.getOperandStr()));
+    program.add(new Instruction(instruction.getOpcode(),
+            instruction.getOperand(),
+            instruction.getMode(),
+            instruction.getOpcodeStr(),
+            instruction.getOperandStr()));
     programCounter++;
-    return instr;
+    return instruction;
   }
 
   @Override
   public Instruction visitInstrOnly(LcpParser.InstrOnlyContext ctx) throws ConfigurationException {
     var mnemocode = ctx.INSTR().getText().trim();
     InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
-    instr.setMode(Mode.DEFAULT);
-    instr.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
-    instr.setOpcodeStr(instructionConfig != null ? instructionConfig.getMnemocode() : mnemocode);
+    instruction.setMode(Mode.DEFAULT);
+    instruction.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
+    instruction.setOpcodeStr(instructionConfig != null
+            ? instructionConfig.getMnemocode() : mnemocode);
     return super.visitInstrOnly(ctx);
   }
 
   @Override
   public Instruction visitInstrOper(LcpParser.InstrOperContext ctx) throws ConfigurationException {
-    return processInstruction(ctx.INSTR().getText().trim());
+    initInstrOperandContext(ctx);
+    return super.visitInstrOper(ctx);
   }
 
   @Override
   public Instruction visitInstrExpr(LcpParser.InstrExprContext ctx) throws ConfigurationException {
-    return processInstruction(ctx.INSTR().getText().trim());
-  }
-
-  private Instruction processInstruction(String mnemocode) throws ConfigurationException {
-    InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
-    instr.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
-    instr.setOpcodeStr(instructionConfig != null ? instructionConfig.getMnemocode() : mnemocode);
-    return instr;
+    initExpOperandContext(ctx);
+    return super.visitInstrExpr(ctx);
   }
 
   @Override
   public Instruction visitInstrLabel(LcpParser.InstrLabelContext ctx)
           throws ConfigurationException {
     if (LcpParser.pass == 2) {
-      String mnemocode = ctx.INSTR().getText().trim();
+      var mnemocode = ctx.INSTR().getText().trim();
       InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
 
-      instr.setMode(Mode.ABSOLUTE);
-      instr.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
-      instr.setOpcodeStr(instructionConfig != null ? instructionConfig.getMnemocode() : mnemocode);
+      instruction.setMode(Mode.ABSOLUTE);
+      instruction.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
+      instruction.setOpcodeStr(instructionConfig != null
+              ? instructionConfig.getMnemocode() : mnemocode);
 
       var label = ctx.LABEL().getText().trim();
-      instr.setOperand(symbolTable.getSymbolValue(label));
-      instr.setOperandStr(label);
+      instruction.setOperand(symbolTable.getSymbolValue(label));
+      instruction.setOperandStr(label);
     }
     return super.visitInstrLabel(ctx);
   }
 
   @Override
   public Instruction visitOperExpr(LcpParser.OperExprContext ctx) {
-    instr.setMode(Mode.ABSOLUTE);
+    instruction.setMode(Mode.ABSOLUTE);
     return super.visitOperExpr(ctx);
   }
 
   @Override
   public Instruction visitOperImmExpr(LcpParser.OperImmExprContext ctx) {
-    instr.setMode(Mode.IMMEDIATE);
+    instruction.setMode(Mode.IMMEDIATE);
     return super.visitOperImmExpr(ctx);
   }
 
@@ -140,8 +143,8 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
   public Instruction visitExprIdent(LcpParser.ExprIdentContext ctx) {
     if (LcpParser.pass == 2) {
       var ident = ctx.IDENT().getText().trim();
-      instr.setOperand(symbolTable.getSymbolValue(ident));
-      instr.setOperandStr(ident);
+      instruction.setOperand(symbolTable.getSymbolValue(ident));
+      instruction.setOperandStr(ident);
     }
     return super.visitExprIdent(ctx);
   }
@@ -153,8 +156,34 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
             ? Integer.parseInt(constant.substring(0, constant.length() - 1), 16) :
               Integer.parseInt(constant);
 
-    instr.setOperand(value);
-    instr.setOperandStr(String.format("%1$02Xh", value));
+    instruction.setOperand(value);
+    instruction.setOperandStr(String.format("%1$02Xh", value));
     return super.visitExprConstant(ctx);
+  }
+
+  private void setInstructionOpcode(Instruction instruction, String mnemocode)
+          throws ConfigurationException {
+    InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);
+    instruction.setOpcode(instructionConfig != null ? instructionConfig.getOpcode() : 0);
+    instruction.setOpcodeStr(instructionConfig != null
+            ? instructionConfig.getMnemocode() : mnemocode);
+  }
+
+  private void initInstrOperandContext(LcpParser.InstrOperContext ctx)
+          throws ConfigurationException {
+    var mnemocode = ctx.INSTR().getText().trim();
+    setInstructionOpcode(instruction, mnemocode);
+  }
+
+  private void initExpOperandContext(LcpParser.InstrExprContext ctx) throws ConfigurationException {
+    var mnemocode = ctx.INSTR().getText().trim();
+    setInstructionOpcode(instruction, mnemocode);
+  }
+
+  private int parseConstant(String constant) throws ConfigurationException {
+    return Optional.of(constant.trim().toUpperCase())
+            .map(c -> c.endsWith("H") ? Integer.parseInt(c.substring(0, c.length() - 1), 16)
+                    : Integer.parseInt(c)).orElseThrow(() ->
+                    new ConfigurationException("Invalid constant format: " + constant));
   }
 }
