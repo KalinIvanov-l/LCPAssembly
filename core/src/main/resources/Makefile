@@ -20,7 +20,7 @@ parser_grammar: $(PARSER_GRAMMAR)
 		$(JAVA) -cp $(ANTLR_LIB) $(ANTLR) -lib $(GRAMMAR_PATH) -o $(SRC) -visitor -no-listener $(PARSER_GRAMMAR)
 
 parser: $(PARSER_GRAMMAR)
-		$(JAVAC) -d $(BIN)/ -cp $(SRC);$(LIBS) $(SRC)/*.java 
+		$(JAVAC) -d $(BIN)/ -cp $(SRC):$(LIBS) $(SRC)/*.java
 
 clean:
 		del $(BIN)\*.class 
