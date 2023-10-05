@@ -66,7 +66,7 @@ public final class ListingGenerator {
    * @return The calculated opcode value.
    */
   private static int calculateOpcode(Instruction instr, Configuration config) {
-    int opcode = instr.getOpcode()
+    var opcode = instr.getOpcode()
             << (config.getInstructionFieldsConfig().getOperandFieldLength()
             + config.getInstructionFieldsConfig().getAddressingModeFieldLength());
 

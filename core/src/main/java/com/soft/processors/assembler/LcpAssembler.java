@@ -87,14 +87,14 @@ public final class LcpAssembler {
    * @return The generated listing content as a string.
    */
   public static String generateListing() {
-    String header = "\nAddress:      Machine Code:         Instruction:         Labels:\n\n";
+    var header = "\nAddress:      Machine Code:         Instruction:         Labels:\n\n";
 
-    String listingContent = IntStream.range(0, PROGRAM.size())
+    var listingContent = IntStream.range(0, PROGRAM.size())
             .mapToObj(counter ->
                     ListingGenerator.generateListingLine(CONFIG, PROGRAM.get(counter), counter))
             .collect(Collectors.joining(DELIMITER));
 
-    String listing = header + listingContent;
+    var listing = header + listingContent;
     LOGGER.info("{}", listing);
     return listing;
   }
@@ -112,7 +112,7 @@ public final class LcpAssembler {
     CONFIG.loadDefaultConfig();
     CONFIG.readConfig(Path.of(fileName.toUri()));
 
-    String outputFile = inputFile.contains(".")
+    var outputFile = inputFile.contains(".")
             ? inputFile.substring(0, inputFile.lastIndexOf('.')) + ".lst"
             : ROM_FILE;
 
@@ -121,7 +121,7 @@ public final class LcpAssembler {
       return new AssemblyResult("", outputFile);
     }
 
-    String listingContent = generateListing();
+    var listingContent = generateListing();
     return new AssemblyResult(listingContent, outputFile);
   }
 

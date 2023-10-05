@@ -62,7 +62,7 @@ public class AssemblerController {
   public ResponseEntity<String> loadFile(@RequestParam("file") MultipartFile file)
           throws IOException, InvalidFileException {
     checkNotEmpty(file);
-    String fileContent = new String(file.getBytes(), StandardCharsets.UTF_8);
+    var fileContent = new String(file.getBytes(), StandardCharsets.UTF_8);
     return ResponseEntity.ok(fileContent);
   }
 

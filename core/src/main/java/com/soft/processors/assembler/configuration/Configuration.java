@@ -108,7 +108,7 @@ public class Configuration {
    * @throws IOException if an I/O error occurs while reading the configuration file.
    */
   private JsonObject parseJsonFile(Path configFilePath) throws IOException {
-    String json = String.join("\n", Files.readAllLines(configFilePath));
+    var json = String.join("\n", Files.readAllLines(configFilePath));
     return JsonParser.parseString(json).getAsJsonObject();
   }
 
@@ -121,10 +121,10 @@ public class Configuration {
    */
   private InstructionFieldsConfig readInstructionFieldsConfig(JsonObject configObj) {
     JsonObject fieldsObj = configObj.getAsJsonObject("instructionFieldsConfig");
-    int opcodeFieldLength = fieldsObj.getAsJsonPrimitive("opcodeFieldLength").getAsInt();
-    int addressingModeFieldLength = fieldsObj.getAsJsonPrimitive(
+    var opcodeFieldLength = fieldsObj.getAsJsonPrimitive("opcodeFieldLength").getAsInt();
+    var addressingModeFieldLength = fieldsObj.getAsJsonPrimitive(
             "addressingModeFieldLength").getAsInt();
-    int operandFieldLength = fieldsObj.getAsJsonPrimitive("operandFieldLength").getAsInt();
+    var operandFieldLength = fieldsObj.getAsJsonPrimitive("operandFieldLength").getAsInt();
 
     return new InstructionFieldsConfig(
             opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
