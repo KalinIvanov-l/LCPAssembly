@@ -58,7 +58,7 @@ public class AssemblerController {
    * @throws IOException          If an I/O error occurs while loading the file.
    * @throws InvalidFileException if the file is empty
    */
-  @PostMapping("/loadFile") // Change the annotation to @PostMapping
+  @PostMapping("/loadFile")
   public ResponseEntity<String> loadFile(@RequestParam("file") MultipartFile file)
           throws IOException, InvalidFileException {
     checkNotEmpty(file);
