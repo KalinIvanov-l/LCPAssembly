@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lcp-assembler-core:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - lcp-network
+    depends_on:
+      - frontend
+    environment:
+      - JAVA_OPTIONS=-Xmx512m
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: lcp-assembler-frontend:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - lcp-network
+    environment:
+      - REACT_APP_BACKEND_URL=http://core:8080
+
+networks:
+  lcp-network:
+    driver: bridge
