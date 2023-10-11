@@ -1,24 +1,24 @@
  Symbol Table: { a=00h, b=01h, temp=02h, L1=02h, L2=06h, L3=0Fh, L4=13h, }
 
-01		 : 400		; STORE
-02		 : 200		; LOAD 	
-03		 : 400		; STORE	
-04		 : A00		; INP  	
-05		 : 400		; STORE	
-06		 : 200		; LOAD 	
-07		 : 600		; NOR  	
-08		 : 800		; ADD  	
-09		 : 800		; ADD  	
-0A		 : E0F		; JCC  	L3
-0B		 : 40F		; STORE	L3
-0C		 : 80F		; ADD  	L3
-0D		 : E13		; JCC  	L4
-0E		 : E06		; JCC  	L2
-0F		 : 606		; NOR  	L2
-10		 : 806		; ADD  	L2
-11		 : 406		; STORE	L2
-12		 : E06		; JCC  	L2
-13		 : 206		; LOAD 	L2
-14		 : C00		; OUTP 	L2
-15		 : E02		; JCC  	L1
-
+00		 : A00			 : INP  		 : 01h
+01		 : 402			 : STORE		 : temp
+02		 : 202			 : LOAD 		 : temp
+03		 : 400			 : STORE		 : a
+04		 : A00			 : INP  		 : a
+05		 : 401			 : STORE		 : b
+06		 : 200			 : LOAD 		 : a
+07		 : 700			 : NOR  		 : #00h
+08		 : 901			 : ADD  		 : #01h
+09		 : 801			 : ADD  		 : b
+0A		 : E0F			 : JCC  		 : L3
+0B		 : 401			 : STORE		 : b
+0C		 : 9FF			 : ADD  		 : #FFh
+0D		 : E13			 : JCC  		 : L4
+0E		 : E06			 : JCC  		 : L2
+0F		 : 700			 : NOR  		 : #00h
+10		 : 901			 : ADD  		 : #01h
+11		 : 400			 : STORE		 : a
+12		 : E06			 : JCC  		 : L2
+13		 : 200			 : LOAD 		 : a
+14		 : C00			 : OUTP 		 : a
+15		 : E02			 : JCC  		 : L1
