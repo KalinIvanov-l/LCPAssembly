@@ -68,6 +68,51 @@ public class Configuration {
   }
 
   /**
+   * Reads the instruction fields configuration from the given JsonObject and creates an
+   * InstructionFieldsConfig object with the extracted data.
+   *
+   * @param configObj The JsonObject containing the instruction fields configuration.
+   * @return An InstructionFieldsConfig object with the configuration data.
+   */
+  public InstructionFieldsConfig readInstructionFieldsConfig(JsonObject configObj) {
+    JsonObject fieldsObj = configObj.getAsJsonObject("instructionFieldsConfig");
+    var opcodeFieldLength = fieldsObj.getAsJsonPrimitive("opcodeFieldLength").getAsInt();
+    var addressingModeFieldLength = fieldsObj.getAsJsonPrimitive(
+            "addressingModeFieldLength").getAsInt();
+    var operandFieldLength = fieldsObj.getAsJsonPrimitive("operandFieldLength").getAsInt();
+
+    return new InstructionFieldsConfig(
+            opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
+  }
+
+  /**
+   * Reads the instruction configuration map from the given JsonObject and creates a HashMap
+   * containing InstructionConfig objects with the extracted data.
+   *
+   * @param configObj The JsonObject containing the instruction configuration map.
+   * @return A HashMap containing InstructionConfig objects with mnemonic
+   *         as keys and the corresponding configuration data as values.
+   */
+  public Map<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
+    JsonArray instructionArray = configObj.getAsJsonArray("instructionConfig");
+
+    List<JsonObject> instructionList = new ArrayList<>();
+    instructionArray.forEach(element -> instructionList.add(element.getAsJsonObject()));
+
+    return instructionList.stream()
+            .collect(Collectors.toMap(
+                    obj -> obj.getAsJsonPrimitive("mnemocode").getAsString(),
+                    obj -> new InstructionConfig(
+                            obj.getAsJsonPrimitive("mnemocode").getAsString(),
+                            obj.getAsJsonPrimitive("opcode").getAsInt(),
+                            obj.getAsJsonPrimitive("addressingModes").getAsInt()
+                    ),
+                    (existing, replacement) -> replacement,
+                    HashMap::new
+            ));
+  }
+
+  /**
    * Provides simple check for instruction.
    *
    * @throws ConfigurationException if provide input is empty
@@ -110,50 +155,5 @@ public class Configuration {
   private JsonObject parseJsonFile(Path configFilePath) throws IOException {
     var json = String.join("\n", Files.readAllLines(configFilePath));
     return JsonParser.parseString(json).getAsJsonObject();
-  }
-
-  /**
-   * Reads the instruction fields configuration from the given JsonObject and creates an
-   * InstructionFieldsConfig object with the extracted data.
-   *
-   * @param configObj The JsonObject containing the instruction fields configuration.
-   * @return An InstructionFieldsConfig object with the configuration data.
-   */
-  private InstructionFieldsConfig readInstructionFieldsConfig(JsonObject configObj) {
-    JsonObject fieldsObj = configObj.getAsJsonObject("instructionFieldsConfig");
-    var opcodeFieldLength = fieldsObj.getAsJsonPrimitive("opcodeFieldLength").getAsInt();
-    var addressingModeFieldLength = fieldsObj.getAsJsonPrimitive(
-            "addressingModeFieldLength").getAsInt();
-    var operandFieldLength = fieldsObj.getAsJsonPrimitive("operandFieldLength").getAsInt();
-
-    return new InstructionFieldsConfig(
-            opcodeFieldLength, addressingModeFieldLength, operandFieldLength);
-  }
-
-  /**
-   * Reads the instruction configuration map from the given JsonObject and creates a HashMap
-   * containing InstructionConfig objects with the extracted data.
-   *
-   * @param configObj The JsonObject containing the instruction configuration map.
-   * @return A HashMap containing InstructionConfig objects with mnemonic
-   *         as keys and the corresponding configuration data as values.
-   */
-  private Map<String, InstructionConfig> readInstructionConfigMap(JsonObject configObj) {
-    JsonArray instructionArray = configObj.getAsJsonArray("instructionConfig");
-
-    List<JsonObject> instructionList = new ArrayList<>();
-    instructionArray.forEach(element -> instructionList.add(element.getAsJsonObject()));
-
-    return instructionList.stream()
-            .collect(Collectors.toMap(
-                    obj -> obj.getAsJsonPrimitive("mnemocode").getAsString(),
-                    obj -> new InstructionConfig(
-                            obj.getAsJsonPrimitive("mnemocode").getAsString(),
-                            obj.getAsJsonPrimitive("opcode").getAsInt(),
-                            obj.getAsJsonPrimitive("addressingModes").getAsInt()
-                    ),
-                    (existing, replacement) -> replacement,
-                    HashMap::new
-            ));
   }
 }
