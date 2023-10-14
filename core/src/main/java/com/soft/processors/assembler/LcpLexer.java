@@ -27,24 +27,43 @@ public class LcpLexer extends Lexer {
   protected static final PredictionContextCache _sharedContextCache =
           new PredictionContextCache();
   public static final int
-          T__0 = 1, T__1 = 2, T__2 = 3, LABEL = 4, CONST = 5, IDENT = 6, INSTR = 7, COMMENT = 8,
-          EOL = 9, WHITE_SPACE = 10, ANY = 11;
+          T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9,
+          T__9=10, LABEL=11, CONST=12, IDENT=13, INSTR=14, COMMENT=15, EOL=16, WHITE_SPACE=17,
+          ANY=18;
+
+  public static String[] channelNames = {
+          "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+  };
+
   public static String[] modeNames = {
           "DEFAULT_MODE"
   };
 
-  public static final String[] ruleNames = {
-          "T__0", "T__1", "T__2", "LABEL", "CONST", "IDENT", "INSTR", "COMMENT",
-          "EOL", "WHITE_SPACE", "ANY", "DIGIT", "HEX_DIGIT"
-  };
+  private static String[] makeRuleNames() {
+    return new String[] {
+            "assemblyProg", "line", "directive", "newDirective", "macroDefinition",
+            "paramList", "labeledInstruction", "instruction", "oper", "expr"
+    };
+  }
+  public static final String[] ruleNames = makeRuleNames();
 
-  private static final String[] _LITERAL_NAMES = {
-          null, "'EQU'", "':'", "'#'"
-  };
-  private static final String[] _SYMBOLIC_NAMES = {
-          null, null, null, null, "LABEL", "CONST", "IDENT", "INSTR", "COMMENT",
-          "EOL", "WHITE_SPACE", "ANY"
-  };
+  private static String[] makeLiteralNames() {
+    return new String[] {
+            null, "'EQU'", "'DATA'", "'ORG'", "'MACRO'", "'('", "')'", "'ENDMACRO'",
+            "','", "':'", "'#'"
+    };
+  }
+  private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+  private static String[] makeSymbolicNames() {
+    return new String[] {
+            null, null, null, null, null, null, null, null, null, null, null, "LABEL",
+            "CONST", "IDENT", "INSTR", "COMMENT", "EOL", "WHITE_SPACE", "ANY"
+    };
+  }
+
+  private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
+
   public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
   @Override

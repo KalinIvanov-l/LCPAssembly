@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.atn.ParserATNSimulator;
 import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -43,13 +44,20 @@ public class LcpParser extends Parser {
           "oper", "expr"
   };
 
-  private static final String[] _LITERAL_NAMES = {
-          null, "'EQU'", "':'", "'#'"
-  };
-  private static final String[] _SYMBOLIC_NAMES = {
-          null, null, null, null, "LABEL", "CONST", "IDENT", "INSTR", "COMMENT",
-          "EOL", "WHITE_SPACE", "ANY"
-  };
+  private static String[] makeLiteralNames() {
+    return new String[] {
+            null, "'EQU'", "'DATA'", "'ORG'", "'MACRO'", "'('", "')'", "'ENDMACRO'",
+            "','", "':'", "'#'"
+    };
+  }
+  private static final String[] _LITERAL_NAMES = makeLiteralNames();
+  private static String[] makeSymbolicNames() {
+    return new String[] {
+            null, null, null, null, null, null, null, null, null, null, null, "LABEL",
+            "CONST", "IDENT", "INSTR", "COMMENT", "EOL", "WHITE_SPACE", "ANY"
+    };
+  }
+  private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
   public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
   /**
@@ -281,6 +289,198 @@ public class LcpParser extends Parser {
     }
     return _localctx;
   }
+
+//  public static class NewDirectiveContext extends ParserRuleContext {
+//    public TerminalNode CONST() { return getToken(LcpParser.CONST, 0); }
+//    public NewDirectiveContext(ParserRuleContext parent, int invokingState) {
+//      super(parent, invokingState);
+//    }
+//    @Override public int getRuleIndex() { return RULE_newDirective; }
+//    @Override
+//    public void enterRule(ParseTreeListener listener) {
+//      if ( listener instanceof LcpVisitor ) ((LcpVisitor)listener).visitNewDirective(this);
+//    }
+//    @Override
+//    public void exitRule(ParseTreeListener listener) {
+//      if ( listener instanceof LcpVisitor ) ((LcpVisitor)listener).visitNewDirective(this);
+//    }
+//  }
+//
+//  public final LcpParser.NewDirectiveContext newDirective() throws RecognitionException {
+//    LcpParser.NewDirectiveContext _localctx = new LcpParser.NewDirectiveContext(_ctx, getState());
+//    enterRule(_localctx, 6, RULE_newDirective);
+//    try {
+//      setState(42);
+//      _errHandler.sync(this);
+//      switch (_input.LA(1)) {
+//        case T__1:
+//          enterOuterAlt(_localctx, 1);
+//        {
+//          setState(38);
+//          match(T__1);
+//          setState(39);
+//          match(CONST);
+//        }
+//        break;
+//        case T__2:
+//          enterOuterAlt(_localctx, 2);
+//        {
+//          setState(40);
+//          match(T__2);
+//          setState(41);
+//          match(CONST);
+//        }
+//        break;
+//        default:
+//          throw new NoViableAltException(this);
+//      }
+//    }
+//    catch (RecognitionException re) {
+//      _localctx.exception = re;
+//      _errHandler.reportError(this, re);
+//      _errHandler.recover(this, re);
+//    }
+//    finally {
+//      exitRule();
+//    }
+//    return _localctx;
+//  }
+//
+//  public static class MacroDefinitionContext extends ParserRuleContext {
+//    public TerminalNode IDENT() { return getToken(LcpParser.IDENT, 0); }
+//    public LcpParser.ParamListContext paramList() {
+//      return getRuleContext(LcpParser.ParamListContext.class,0);
+//    }
+//    public List<LcpParser.InstructionContext> instruction() {
+//      return getRuleContexts(LcpParser.InstructionContext.class);
+//    }
+//    public LcpParser.InstructionContext instruction(int i) {
+//      return getRuleContext(LcpParser.InstructionContext.class,i);
+//    }
+//    public MacroDefinitionContext(ParserRuleContext parent, int invokingState) {
+//      super(parent, invokingState);
+//    }
+//    @Override public int getRuleIndex() { return RULE_macroDefinition; }
+//    @Override
+//    public void enterRule(ParseTreeListener listener) {
+//      if ( listener instanceof LcpVisitor ) ((LcpVisitor)listener).visitMacroDefinition(this);
+//    }
+//    @Override
+//    public void exitRule(ParseTreeListener listener) {
+//      if ( listener instanceof LcpVisitor ) ((LcpVisitor)listener).visitMacroDefinition(this);
+//    }
+//  }
+//
+//  public final LcpParser.MacroDefinitionContext macroDefinition() throws RecognitionException {
+//    LcpParser.MacroDefinitionContext _localctx = new LcpParser.MacroDefinitionContext(_ctx, getState());
+//    enterRule(_localctx, 8, RULE_macroDefinition);
+//    int _la;
+//    try {
+//      enterOuterAlt(_localctx, 1);
+//      {
+//        setState(44);
+//        match(T__3);
+//        setState(45);
+//        match(IDENT);
+//        setState(46);
+//        match(T__4);
+//        setState(48);
+//        _errHandler.sync(this);
+//        _la = _input.LA(1);
+//        if (_la==IDENT) {
+//          {
+//            setState(47);
+//            paramList();
+//          }
+//        }
+//
+//        setState(50);
+//        match(T__5);
+//        setState(54);
+//        _errHandler.sync(this);
+//        _la = _input.LA(1);
+//        while (_la==INSTR) {
+//          {
+//            {
+//              setState(51);
+//              instruction();
+//            }
+//          }
+//          setState(56);
+//          _errHandler.sync(this);
+//          _la = _input.LA(1);
+//        }
+//        setState(57);
+//        match(T__6);
+//      }
+//    }
+//    catch (RecognitionException re) {
+//      _localctx.exception = re;
+//      _errHandler.reportError(this, re);
+//      _errHandler.recover(this, re);
+//    }
+//    finally {
+//      exitRule();
+//    }
+//    return _localctx;
+//  }
+//
+//  public static class ParamListContext extends ParserRuleContext {
+//    public List<TerminalNode> IDENT() { return getTokens(LcpParser.IDENT); }
+//    public TerminalNode IDENT(int i) {
+//      return getToken(LcpParser.IDENT, i);
+//    }
+//    public ParamListContext(ParserRuleContext parent, int invokingState) {
+//      super(parent, invokingState);
+//    }
+//    @Override public int getRuleIndex() { return RULE_paramList; }
+//    @Override
+//    public void enterRule(ParseTreeListener listener) {
+//      if ( listener instanceof LcpVisitor ) ((LcpVisitor)listener).visitParamList(this);
+//    }
+//    @Override
+//    public void exitRule(ParseTreeListener listener) {
+//      if ( listener instanceof LcpVisitor ) ((LcpVisitor)listener).visitParamList(this);
+//    }
+//  }
+//
+//  public final LcpParser.ParamListContext paramList() throws RecognitionException {
+//    LcpParser.ParamListContext _localctx = new LcpParser.ParamListContext(_ctx, getState());
+//    enterRule(_localctx, 10, RULE_paramList);
+//    int _la;
+//    try {
+//      enterOuterAlt(_localctx, 1);
+//      {
+//        setState(59);
+//        match(IDENT);
+//        setState(64);
+//        _errHandler.sync(this);
+//        _la = _input.LA(1);
+//        while (_la==T__7) {
+//          {
+//            {
+//              setState(60);
+//              match(T__7);
+//              setState(61);
+//              match(IDENT);
+//            }
+//          }
+//          setState(66);
+//          _errHandler.sync(this);
+//          _la = _input.LA(1);
+//        }
+//      }
+//    }
+//    catch (RecognitionException re) {
+//      _localctx.exception = re;
+//      _errHandler.reportError(this, re);
+//      _errHandler.recover(this, re);
+//    }
+//    finally {
+//      exitRule();
+//    }
+//    return _localctx;
+//  }
 
   public static class LabeledInstructionContext extends ParserRuleContext {
     public LabeledInstructionContext(ParserRuleContext parent, int invokingState) {

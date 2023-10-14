@@ -161,6 +161,30 @@ public class LcpParserVisitor extends LcpBaseVisitor<Instruction> {
     return super.visitExprConstant(ctx);
   }
 
+//  @Override
+//  public Instruction visitMacroDefinition(LcpParser.MacroDefinitionContext ctx) {
+//    System.out.println("Macro: " + ctx.IDENT().getText());
+//    return super.visitMacroDefinition(ctx);
+//  }
+//
+//  @Override
+//  public Instruction visitNewDirective(LcpParser.NewDirectiveContext ctx) {
+//    if (ctx.getText().startsWith("DATA")) {
+//      System.out.println("Directive: DATA, Value: " + ctx.CONST().getText());
+//    } else if (ctx.getText().startsWith("ORG")) {
+//      System.out.println("Directive: ORG, Value: " + ctx.CONST().getText());
+//    }
+//    return super.visitNewDirective(ctx);
+//  }
+//
+//  @Override
+//  public Instruction visitParamList(LcpParser.ParamListContext ctx) {
+//    for (var param : ctx.IDENT()) {
+//      System.out.println("Param: " + param.getText());
+//    }
+//    return super.visitParamList(ctx);
+//  }
+
   private void setInstructionOpcode(Instruction instruction, String mnemocode)
           throws ConfigurationException {
     InstructionConfig instructionConfig = config.getInstructionConfig(mnemocode);

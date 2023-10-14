@@ -154,4 +154,31 @@ public class LcpBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements Lc
   public T visitExprConstant(LcpParser.ExprConstantContext ctx) {
     return visitChildren(ctx);
   }
+//
+//  @Override
+//  public T visitNewDirective(LcpParser.NewDirectiveContext ctx) {
+//    return visitChildren(ctx);
+//  }
+//
+//  /**
+//   * Visits a 'macroDefinition' node in the parse tree.
+//   *
+//   * @param ctx the 'macroDefinition' context.
+//   * @return the result of visiting this node.
+//   */
+//  @Override
+//  public T visitMacroDefinition(LcpParser.MacroDefinitionContext ctx) {
+//    return visitChildren(ctx);
+//  }
+//
+//  /**
+//   * Visits a 'paramList' node in the parse tree.
+//   *
+//   * @param ctx the 'paramList' context.
+//   * @return the result of visiting this node.
+//   */
+//  @Override
+//  public T visitParamList(LcpParser.ParamListContext ctx) {
+//    return visitChildren(ctx);
+//  }
 }

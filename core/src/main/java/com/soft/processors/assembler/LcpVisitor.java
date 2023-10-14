@@ -124,4 +124,11 @@ public interface LcpVisitor<T> extends ParseTreeVisitor<T> {
    * @return the visitor result
    */
   T visitExprConstant(LcpParser.ExprConstantContext ctx);
+
+//
+//  T visitMacroDefinition(LcpParser.MacroDefinitionContext ctx);
+//
+//  T visitNewDirective(LcpParser.NewDirectiveContext ctx);
+//
+//  T visitParamList(LcpParser.ParamListContext ctx);
 }
