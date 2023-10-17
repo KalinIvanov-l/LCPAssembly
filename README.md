@@ -1,10 +1,8 @@
+[![CircleCI Status](https://circleci.com/gh/rubocop/rubocop/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/KalinIvanov-l/LCPAssembly?branch=main) ![Build and Deploy Snapshot](https://github.com/KalinIvanov-l/LCPAssembly/actions/workflows/maven.yml/badge.svg)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/KalinIvanov-l/lcp-assembly/master/assets/logo.png" alt="lcp-assembly Logo" />
 </p>
-
-[![CircleCI Status](https://circleci.com/gh/rubocop/rubocop/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/KalinIvanov-l/LCPAssembly?branch=main) ![Build and Deploy Snapshot](https://github.com/KalinIvanov-l/LCPAssembly/actions/workflows/maven.yml/badge.svg)
-
 
 ## About
 lcp-assembly is an educational project focused on learning and experimenting with different instructions using Java.
