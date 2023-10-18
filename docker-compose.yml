@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: lcp-assembler-core:latest
+    image: assembly:latest
     ports:
       - "8080:8080"
     networks:
