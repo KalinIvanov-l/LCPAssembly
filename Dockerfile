@@ -6,15 +6,19 @@ COPY . .
 
 RUN mvn clean package -pl core -am
 
-# Use a smaller base image for running the application
+# Runtime stage
 FROM openjdk:17-jdk-slim
 
-COPY --from=build /project/core /core
+WORKDIR /app
 
-WORKDIR /core
+COPY --from=build /project/core/target/core-0.0.1-SNAPSHOT.jar ./core-0.0.1-SNAPSHOT.jar
 
-COPY --from=build /project/core/target/core-0.0.1-SNAPSHOT.jar ./target/core-0.0.1-SNAPSHOT.jar
+RUN mkdir -p ./core/src/main/resources
+
+COPY --from=build /project/core/src/main/resources/test.txt ./core/src/main/resources/test.txt
+
+COPY --from=build /project/core/config.json ./core/config.json
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "target/core-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "core-0.0.1-SNAPSHOT.jar"]
