@@ -54,7 +54,8 @@ public final class ListingGenerator {
       case 2 -> String.format("%1$03X\t\t\t", calculateOpcode(instr, config));
       case 3 -> String.format("%1$-5s\t\t", instr.getOpcodeStr());
       case 4 -> formatOperand(instr);
-      default -> "";
+      default -> throw new IllegalArgumentException(
+              "Nothing generated, check instruction and configuration");
     };
   }
 
