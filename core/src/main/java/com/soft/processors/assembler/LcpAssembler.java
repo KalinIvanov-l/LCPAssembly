@@ -21,11 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class represents an assembler for the LCP (Little Computer Processor) architecture.
- * It contains methods for parsing a source file, generating a symbol table,
- * and generating a listing file && a coefficient file.
- * The assembler includes two passes - the first pass generates a symbol table,
- * and the second pass generates the actual machine code.
+ * Represents an assembler for the LCP (Little Computer Processor) architecture.
+ * Provides functionality to parse a source file, generate a symbol table,
+ * and create listing and coefficient files.
+ * The assembler executes in two passes:
+ * the first pass generates a symbol table, and the second pass generates machine code.
  *
  * @author kalin
  */
@@ -53,10 +53,10 @@ public final class LcpAssembler {
   }
 
   /**
-   * This method contains execution of two passes.
-   * First is create a lexer that feeds off of input stream.
-   * Also create a buffer of tokens pulled from lexer and create symbol table.
-   * Second visit tree and generate a source.
+   * Executes two passes of the assembly process: the first pass to generate a symbol table,
+   * followed by a second pass to generate machine code.
+   * A lexer is created to process the input stream, which feeds a stream of tokens into the parser.
+   * The symbol table is created and subsequently used to generate the source code.
    *
    * @param sourceFile example file for program
    * @return if parse successes return true
@@ -82,7 +82,8 @@ public final class LcpAssembler {
   }
 
   /**
-   * This method check instruction and also print listing based on given instruction.
+   * Generates a listing based on the instructions provided.
+   * The listing includes address, machine code, instruction, and label columns.
    *
    * @return The generated listing content as a string.
    */
@@ -100,7 +101,7 @@ public final class LcpAssembler {
   }
 
   /**
-   * This method read the input file name and parse the source file.
+   * Reads the input file name and parse the source file.
    *
    * @param fileName name of input file
    * @return input file
