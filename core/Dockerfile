@@ -2,7 +2,7 @@ FROM maven:3-openjdk-17 AS build
 
 WORKDIR /project
 
-COPY . .
+COPY .. .
 
 RUN mvn clean package -pl core -am
 
