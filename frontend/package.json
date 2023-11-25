@@ -8,6 +8,8 @@
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@react-buddy/ide-toolbox": "^2.4.0",
+    "@react-buddy/palette-chakra-ui": "^2.3.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.5.1",
@@ -21,10 +23,8 @@
     "react-axios": "^2.0.6",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
-    "react-scripts": "^5.0.1",
-    "web-vitals": "^3.5.0",
-    "@react-buddy/ide-toolbox": "^2.4.0",
-    "@react-buddy/palette-chakra-ui": "^2.3.1"
+    "react-scripts": "^3.0.1",
+    "web-vitals": "^3.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
