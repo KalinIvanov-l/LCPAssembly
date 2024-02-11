@@ -28,8 +28,6 @@ lcp-assembly is an educational project focused on learning and experimenting wit
 
 ## Running with Docker
 
-We provide a Dockerfile to help you run this project without having to install all the dependencies on your machine.
-
 1. **Build the Docker image**:
     ```bash
     docker build -t lcp-assembly .
