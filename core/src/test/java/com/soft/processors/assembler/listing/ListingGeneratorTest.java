@@ -10,14 +10,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ListingGeneratorTest {
-  private Configuration configuration;
-  private Instruction instruction;
+  private final Configuration configuration = new Configuration();
+  private final Instruction instruction = new Instruction();
 
   @BeforeEach
   void init() {
-    configuration = new Configuration();
     configuration.setInstructionFieldsConfig(new InstructionFieldsConfig(3, 1, 8));
-    instruction = new Instruction();
     instruction.setOpcode(2);
     instruction.setOpcodeStr("ADD");
     instruction.setMode(Mode.IMMEDIATE);
