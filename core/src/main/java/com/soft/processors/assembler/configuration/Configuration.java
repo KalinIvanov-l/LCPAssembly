@@ -13,10 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +23,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author kalin
  */
-@AllArgsConstructor
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class Configuration {
   private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
   Path configFilePath = Path.of("core/config.json");
