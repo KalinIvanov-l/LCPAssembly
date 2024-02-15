@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -29,8 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author kalin
  */
-@Getter
-@Setter
+@Data
 public final class LcpAssembler {
   private static final String ROM_FILE = "ROM.coe";
   private static final Logger LOGGER = LoggerFactory.getLogger(LcpAssembler.class);
