@@ -19,12 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ConfigurationTest {
-  private Configuration configuration;
-
-  @BeforeEach
-  void init() {
-    configuration = new Configuration();
-  }
+  private final Configuration configuration = new Configuration();
 
   @Test
   void shouldAssertDefaultInstructionConfig() {
