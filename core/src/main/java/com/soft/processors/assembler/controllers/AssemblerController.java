@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * AssemblerController is a Spring Boot REST controller responsible for handling requests related to
@@ -63,7 +64,8 @@ public class AssemblerController {
           throws IOException, InvalidFileException {
     checkNotEmpty(file);
     var fileContent = new String(file.getBytes(), StandardCharsets.UTF_8);
-    return ResponseEntity.ok(fileContent);
+    var sanitizedContent = StringEscapeUtils.escapeHtml4(fileContent);
+    return ResponseEntity.ok(sanitizedContent);
   }
 
   /**
